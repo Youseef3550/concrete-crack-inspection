@@ -1,0 +1,10 @@
+{
+  "python.testing.pytestArgs": [
+    "tests"
+  ],
+  "python.testing.unittestEnabled": false,
+  "python.testing.pytestEnabled": true,
+  "files.autoSave": "afterDelay",
+  "editor.fontSize": 14,
+  "editor.wordWrap": "on"
+}

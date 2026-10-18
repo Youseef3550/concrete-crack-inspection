@@ -1,0 +1,14 @@
+{
+  "name": "pipeline_a",
+  "description": "Pipeline A: Spatial contrast enhancement followed by Otsu thresholding",
+  "enhancement": {
+    "gamma": 0.8,
+    "contrast_stretching": true,
+    "r_min": 20,
+    "r_max": 230
+  },
+  "segmentation": {
+    "method": "otsu",
+    "invert": true
+  }
+}

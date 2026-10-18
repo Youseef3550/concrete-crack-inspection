@@ -1,0 +1,7 @@
+{
+  "name": "baseline_trivial",
+  "description": "Trivial Baseline applying fixed global threshold of 127 on raw grayscale input",
+  "method": "global_threshold",
+  "thresh": 127,
+  "invert": true
+}

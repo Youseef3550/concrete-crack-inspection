@@ -1,0 +1,39 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "🚀 Launch Streamlit Demo App",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "streamlit",
+      "args": ["run", "app/app.py"],
+      "console": "integratedTerminal"
+    },
+    {
+      "name": "🔍 Inspect Sample 001.jpg (CLI)",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/src/run_pipeline.py",
+      "args": [
+        "--image", "data/raw/images/001.jpg",
+        "--output", "results"
+      ],
+      "console": "integratedTerminal"
+    },
+    {
+      "name": "📊 Run Evaluation & Failure Analysis",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/src/evaluate.py",
+      "console": "integratedTerminal"
+    },
+    {
+      "name": "🧪 Run PyTest Test Suite",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "pytest",
+      "args": ["tests/test_numpy_vs_lib.py", "-v"],
+      "console": "integratedTerminal"
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+
+# Testing & Jupyter
+.pytest_cache/
+.ipynb_checkpoints/
+
+# Raw data (per CSE281 spec: no large raw data in git)
+data/raw/images/*.jpg
+data/raw/masks/*.png
+data/raw/*.mat
+!data/raw/README.md
+
+# OS & IDE
+.DS_Store
+Thumbs.db
+*.log

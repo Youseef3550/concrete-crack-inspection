@@ -1,0 +1,8 @@
+{
+  "name": "baseline_simple",
+  "description": "Simple Baseline applying Otsu thresholding followed by one 3x3 opening",
+  "threshold_method": "otsu",
+  "invert": true,
+  "opening_ksize": 3,
+  "opening_shape": "rect"
+}

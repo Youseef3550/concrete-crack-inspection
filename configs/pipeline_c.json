@@ -1,0 +1,31 @@
+{
+  "name": "pipeline_c",
+  "description": "Pipeline C: Production pipeline with Spatial Enhancement, Butterworth Lowpass, Adaptive Gaussian + Sobel confirmation, Morphological Closing & Hole Filling, Area Filtering, and Structural Health Classification",
+  "enhancement": {
+    "gamma": 0.85,
+    "p_low": 2.0,
+    "p_high": 98.0
+  },
+  "restoration_frequency": {
+    "filter": "butterworth_lowpass",
+    "d0": 45.0,
+    "order": 2
+  },
+  "segmentation": {
+    "method": "adaptive_gaussian_edge_confirmed",
+    "block_size": 17,
+    "c": 4.5,
+    "sobel_edge_threshold": 15
+  },
+  "morphology": {
+    "closing_shape": "ellipse",
+    "closing_ksize": 5,
+    "min_object_area": 40,
+    "hole_filling_max_iter": 200
+  },
+  "structural_assessment": {
+    "safe_thresh_pct": 0.20,
+    "critical_thresh_pct": 1.20,
+    "max_crack_length_limit": 200
+  }
+}
