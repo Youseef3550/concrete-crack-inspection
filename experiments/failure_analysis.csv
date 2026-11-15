@@ -1,0 +1,21 @@
+rank,name,iou,category,root_cause,proposed_fix
+1,042,0.0061468780329990294,Low Global Contrast / Heavy Shadow,Low contrast between weathered dark aggregate and crack depression.,Adaptive histogram equalization (CLAHE) with tighter clip limit.
+2,052,0.04576986879806967,High Porosity / Surface Pitting Noise,Concrete air voids and dark pores touching crack segments.,Directional morphological closing along crack orientation to reject round pores.
+3,049,0.0671077504725898,Low Global Contrast / Heavy Shadow,Low contrast between weathered dark aggregate and crack depression.,Adaptive histogram equalization (CLAHE) with tighter clip limit.
+4,118,0.09796734421859381,Low Global Contrast / Heavy Shadow,Low contrast between weathered dark aggregate and crack depression.,Adaptive histogram equalization (CLAHE) with tighter clip limit.
+5,105,0.09919705587152894,Low Global Contrast / Heavy Shadow,Low contrast between weathered dark aggregate and crack depression.,Adaptive histogram equalization (CLAHE) with tighter clip limit.
+6,053,0.12448716445903177,High Porosity / Surface Pitting Noise,Concrete air voids and dark pores touching crack segments.,Directional morphological closing along crack orientation to reject round pores.
+7,087,0.13863773357444242,Low Global Contrast / Heavy Shadow,Low contrast between weathered dark aggregate and crack depression.,Adaptive histogram equalization (CLAHE) with tighter clip limit.
+8,072,0.14470284237726097,Low Global Contrast / Heavy Shadow,Low contrast between weathered dark aggregate and crack depression.,Adaptive histogram equalization (CLAHE) with tighter clip limit.
+9,021,0.1489179202955925,High Porosity / Surface Pitting Noise,Concrete air voids and dark pores touching crack segments.,Directional morphological closing along crack orientation to reject round pores.
+10,003,0.14910277324632953,Low Global Contrast / Heavy Shadow,Low contrast between weathered dark aggregate and crack depression.,Adaptive histogram equalization (CLAHE) with tighter clip limit.
+11,015,0.14959349593495935,Low Global Contrast / Heavy Shadow,Low contrast between weathered dark aggregate and crack depression.,Adaptive histogram equalization (CLAHE) with tighter clip limit.
+12,103,0.1517036618125265,Low Global Contrast / Heavy Shadow,Low contrast between weathered dark aggregate and crack depression.,Adaptive histogram equalization (CLAHE) with tighter clip limit.
+13,059,0.16975505857294995,Low Global Contrast / Heavy Shadow,Low contrast between weathered dark aggregate and crack depression.,Adaptive histogram equalization (CLAHE) with tighter clip limit.
+14,024,0.17895949950609152,High Porosity / Surface Pitting Noise,Concrete air voids and dark pores touching crack segments.,Directional morphological closing along crack orientation to reject round pores.
+15,058,0.18190854870775347,Low Global Contrast / Heavy Shadow,Low contrast between weathered dark aggregate and crack depression.,Adaptive histogram equalization (CLAHE) with tighter clip limit.
+16,061,0.18297614233724221,Low Global Contrast / Heavy Shadow,Low contrast between weathered dark aggregate and crack depression.,Adaptive histogram equalization (CLAHE) with tighter clip limit.
+17,107,0.18551925889809848,Low Global Contrast / Heavy Shadow,Low contrast between weathered dark aggregate and crack depression.,Adaptive histogram equalization (CLAHE) with tighter clip limit.
+18,116,0.20352781546811397,Low Global Contrast / Heavy Shadow,Low contrast between weathered dark aggregate and crack depression.,Adaptive histogram equalization (CLAHE) with tighter clip limit.
+19,114,0.21632402577477755,Low Global Contrast / Heavy Shadow,Low contrast between weathered dark aggregate and crack depression.,Adaptive histogram equalization (CLAHE) with tighter clip limit.
+20,111,0.2503209242618742,Low Global Contrast / Heavy Shadow,Low contrast between weathered dark aggregate and crack depression.,Adaptive histogram equalization (CLAHE) with tighter clip limit.

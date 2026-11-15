@@ -1,0 +1,24 @@
+run_id,date,author,pipeline,stage,method,parameters,random_seed,processing_time_ms,metric_name,metric_value
+RUN_0001,2026-11-14,Tech Lead,Pipeline B,Frequency Restoration,Butterworth Lowpass,"{'D0': 25.0, 'order': 2}",42,51.44,Dev Mean IoU,0.2017
+RUN_0002,2026-11-14,Tech Lead,Pipeline B,Frequency Restoration,Butterworth Lowpass,"{'D0': 45.0, 'order': 2}",42,52.61,Dev Mean IoU,0.1537
+RUN_0003,2026-11-14,Tech Lead,Pipeline B,Frequency Restoration,Butterworth Lowpass,"{'D0': 65.0, 'order': 2}",42,57.28,Dev Mean IoU,0.0771
+RUN_0004,2026-11-14,Enhancement Engineer,Pipeline B,Spatial Restoration,Gaussian Smoothing,"{'kernel_size': 3, 'sigma': 1.0}",42,33.69,Dev Mean IoU,0.0529
+RUN_0005,2026-11-14,Enhancement Engineer,Pipeline B,Spatial Restoration,Gaussian Smoothing,"{'kernel_size': 5, 'sigma': 1.0}",42,45.39,Dev Mean IoU,0.0663
+RUN_0006,2026-11-14,Enhancement Engineer,Pipeline B,Spatial Restoration,Gaussian Smoothing,"{'kernel_size': 7, 'sigma': 1.0}",42,82.76,Dev Mean IoU,0.068
+RUN_0007,2026-11-14,Morphology Engineer,Pipeline C,Morphology Refinement,Morphological Closing,"{'shape': 'rect', 'ksize': 3}",42,66.8,Dev Mean IoU,0.3368
+RUN_0008,2026-11-14,Morphology Engineer,Pipeline C,Morphology Refinement,Morphological Closing,"{'shape': 'rect', 'ksize': 5}",42,58.45,Dev Mean IoU,0.3059
+RUN_0009,2026-11-14,Morphology Engineer,Pipeline C,Morphology Refinement,Morphological Closing,"{'shape': 'rect', 'ksize': 7}",42,60.85,Dev Mean IoU,0.2267
+RUN_0010,2026-11-14,Morphology Engineer,Pipeline C,Morphology Refinement,Morphological Closing,"{'shape': 'ellipse', 'ksize': 3}",42,66.64,Dev Mean IoU,0.3403
+RUN_0011,2026-11-14,Morphology Engineer,Pipeline C,Morphology Refinement,Morphological Closing,"{'shape': 'ellipse', 'ksize': 5}",42,95.67,Dev Mean IoU,0.3309
+RUN_0012,2026-11-14,Morphology Engineer,Pipeline C,Morphology Refinement,Morphological Closing,"{'shape': 'ellipse', 'ksize': 7}",42,73.62,Dev Mean IoU,0.2924
+RUN_0013,2026-11-14,Enhancement Engineer,Ablation 1,Spatial Enhancement,With Enhancement = False,"{'with_enhancement': False, 'gamma': 1.0}",42,69.15,Dev Mean IoU,0.3437
+RUN_0014,2026-11-14,Enhancement Engineer,Ablation 1,Spatial Enhancement,With Enhancement = True,"{'with_enhancement': True, 'gamma': 0.85}",42,74.77,Dev Mean IoU,0.3259
+RUN_0015,2026-11-14,Restoration Engineer,Ablation 2,Smoothing Domain,Spatial_Gaussian,{'mode': 'Spatial_Gaussian'},42,62.21,Dev Mean IoU,0.2784
+RUN_0016,2026-11-14,Restoration Engineer,Ablation 2,Smoothing Domain,Frequency_Butterworth,{'mode': 'Frequency_Butterworth'},42,56.87,Dev Mean IoU,0.3437
+RUN_0017,2026-11-14,Restoration Engineer,Ablation 3,Noise Restoration,Arithmetic_Mean,"{'filter': 'Arithmetic_Mean', 'noise': 'Salt-and-Pepper 3%'}",42,1026.43,PSNR (dB),25.4643
+RUN_0018,2026-11-14,Restoration Engineer,Ablation 3,Noise Restoration,Median_Filter,"{'filter': 'Median_Filter', 'noise': 'Salt-and-Pepper 3%'}",42,3667.82,PSNR (dB),29.8264
+RUN_0019,2026-11-14,Segmentation Engineer,Ablation 4,Thresholding Method,Global_127,{'threshold_method': 'Global_127'},42,1.39,Dev Mean IoU,0.0524
+RUN_0020,2026-11-14,Segmentation Engineer,Ablation 4,Thresholding Method,Otsu,{'threshold_method': 'Otsu'},42,6.65,Dev Mean IoU,0.0305
+RUN_0021,2026-11-14,Segmentation Engineer,Ablation 4,Thresholding Method,Adaptive_Gaussian,{'threshold_method': 'Adaptive_Gaussian'},42,48.6,Dev Mean IoU,0.0322
+RUN_0022,2026-11-14,Morphology Engineer,Ablation 5,Morphology Refinement,With Morphology = False,{'with_morphology': False},42,189.81,Dev Mean IoU,0.1537
+RUN_0023,2026-11-14,Morphology Engineer,Ablation 5,Morphology Refinement,With Morphology = True,{'with_morphology': True},42,207.69,Dev Mean IoU,0.3191
