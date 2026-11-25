@@ -2,6 +2,11 @@
 ## CSE281 Digital Image Processing — Course Project
 **Alamein International University (AIU) | Faculty of Computer Science & Engineering**
 
+[![DIP CI Unit Tests](https://github.com/Youseef3550/concrete-crack-inspection/actions/workflows/ci.yml/badge.svg)](https://github.com/Youseef3550/concrete-crack-inspection/actions)
+![Python 3.12](https://img.shields.io/badge/python-3.12-blue.svg)
+![Tests Passed](https://img.shields.io/badge/tests-11%20passed-brightgreen.svg)
+![Tag v1.0](https://img.shields.io/badge/release-v1.0-orange.svg)
+
 ![Inspection Panel](results/001_inspection_result.png)
 
 ---
