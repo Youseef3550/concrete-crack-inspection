@@ -177,36 +177,92 @@ IoU simultaneously penalizes false alarms (FP) and missed crack segments (FN) di
 1. <strong>Trivial Baseline:</strong> A fixed global intensity threshold at $T = 127$ on raw grayscale images.
 2. <strong>Simple Baseline:</strong> Global Otsu thresholding followed by a single $3 \times 3$ rectangular morphological opening.</p>
 <h3>3.3 Proposed Pipelines of Increasing Sophistication</h3>
-<pre><code>Raw Grayscale Input [uint8, 0-255]
-             │
-             ▼
-[Stage 1: Spatial Enhancement]
-   - Power-Law Gamma (γ = 0.85)
-   - Percentile Contrast Stretch [p2, p98]
-             │
-             ▼ Enhanced Image [uint8, 0-255]
-[Stage 2: Frequency-Domain Restoration]
-   - 2D DFT &amp; Centered Spectrum
-   - Butterworth Low-Pass Filter (D0 = 45, n = 2)
-   - Inverse DFT
-             │
-             ▼ Restored Smooth Surface [uint8, 0-255]
-[Stage 3: Local Adaptive Segmentation]
-   - Local Gaussian Adaptive Threshold (Block = 17, C = 4.5)
-   - Sobel Gradient Magnitude Edge Confirmation (&gt; 15)
-             │
-             ▼ Raw Binary Mask [uint8, {0, 255}]
-[Stage 4: Morphological Refinement]
-   - Directional Closing (5x5 Elliptical SE) -&gt; Bridge Gaps
-   - Small Object Removal (Area Opening &lt; 40 px) -&gt; Pore Filtering
-   - Morphological Reconstruction Hole Filling
-             │
-             ▼ Refined Crack Mask [uint8, {0, 255}]
-[Stage 5: Measurement &amp; Structural Decision Rule]
-   - Connected Component Analysis (Area, Length, Count)
-   - Cracked Area Percentage Calculation
-   - Decision: PASS (&lt;0.20%) | MONITOR (0.20-1.20%) | FAIL (&gt;1.20%)
-</code></pre>
+
+<div style="text-align: center; margin: 25px auto; max-width: 820px; background: #ffffff; border: 1px solid #d0d7de; border-radius: 8px; padding: 18px; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
+<div style="font-weight: bold; font-family: 'Arial', sans-serif; font-size: 13pt; color: #0969da; margin-bottom: 12px;">
+    Figure 1: Full Engineering Block Diagram of Proposed Pipeline C (Final Advanced Production Architecture)
+</div>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 620" style="width: 100%; height: auto; font-family: 'Arial', sans-serif;">
+  <defs>
+    <!-- Arrow Marker -->
+    <marker id="arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#0969da" />
+    </marker>
+    <filter id="shadow" x="-5%" y="-5%" width="110%" height="115%" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="1" dy="2" stdDeviation="2" flood-color="#000000" flood-opacity="0.08"/>
+    </filter>
+  </defs>
+
+  <!-- ================= INPUT NODE ================= -->
+  <rect x="250" y="15" width="300" height="45" rx="6" fill="#f6f8fa" stroke="#d0d7de" stroke-width="2" filter="url(#shadow)"/>
+  <text x="400" y="35" font-size="13" font-weight="bold" fill="#24292f" text-anchor="middle">Input: Concrete Surface Photograph</text>
+  <text x="400" y="50" font-size="11" fill="#57606a" text-anchor="middle">24-bit RGB / Standard Grayscale</text>
+
+  <!-- Flow 1 -->
+  <line x1="400" y1="60" x2="400" y2="100" stroke="#0969da" stroke-width="2.5" marker-end="url(#arrow)"/>
+  <rect x="330" y="70" width="140" height="20" rx="10" fill="#ddf4ff" stroke="#54aeff"/>
+  <text x="400" y="84" font-size="10.5" font-weight="bold" fill="#0969da" text-anchor="middle">uint8 &bull; range [0, 255]</text>
+
+  <!-- ================= STAGE 1: SPATIAL ENHANCEMENT ================= -->
+  <rect x="200" y="102" width="400" height="65" rx="8" fill="#f0f6ff" stroke="#0969da" stroke-width="2" filter="url(#shadow)"/>
+  <rect x="200" y="102" width="400" height="24" rx="8" fill="#0969da"/>
+  <text x="400" y="118" font-size="12" font-weight="bold" fill="#ffffff" text-anchor="middle">STAGE 1: Spatial Contrast Enhancement</text>
+  <text x="400" y="140" font-size="11.5" fill="#1f2328" text-anchor="middle">&bull; Power-law Gamma Transformation (s = c &middot; r<sup>&gamma;</sup>, &gamma; = 0.80)</text>
+  <text x="400" y="156" font-size="11" fill="#57606a" text-anchor="middle">Expands dark dynamic range to accentuate micro-crack depressions</text>
+
+  <!-- Flow 2 -->
+  <line x1="400" y1="167" x2="400" y2="207" stroke="#0969da" stroke-width="2.5" marker-end="url(#arrow)"/>
+  <rect x="315" y="177" width="170" height="20" rx="10" fill="#ddf4ff" stroke="#54aeff"/>
+  <text x="400" y="191" font-size="10.5" font-weight="bold" fill="#0969da" text-anchor="middle">Enhanced Image &bull; uint8 [0, 255]</text>
+
+  <!-- ================= STAGE 2: FREQUENCY RESTORATION ================= -->
+  <rect x="180" y="209" width="440" height="75" rx="8" fill="#f0fff4" stroke="#1a7f37" stroke-width="2" filter="url(#shadow)"/>
+  <rect x="180" y="209" width="440" height="24" rx="8" fill="#1a7f37"/>
+  <text x="400" y="225" font-size="12" font-weight="bold" fill="#ffffff" text-anchor="middle">STAGE 2: Frequency-Domain Noise Restoration (Pure NumPy)</text>
+  <text x="400" y="247" font-size="11.5" fill="#1f2328" text-anchor="middle">&bull; 2D Fast Fourier Transform (FFT) &amp; Centered Log-Spectrum</text>
+  <text x="400" y="262" font-size="11.5" fill="#1f2328" text-anchor="middle">&bull; 2D Butterworth Low-Pass Filter: H(u,v) = 1 / [1 + (D(u,v)/D<sub>0</sub>)<sup>2n</sup>], D<sub>0</sub> = 40, n = 2</text>
+  <text x="400" y="277" font-size="10.5" fill="#57606a" text-anchor="middle">Attenuates high-frequency aggregate gravel noise without spatial ringing</text>
+
+  <!-- Flow 3 -->
+  <line x1="400" y1="284" x2="400" y2="324" stroke="#1a7f37" stroke-width="2.5" marker-end="url(#arrow)"/>
+  <rect x="315" y="294" width="170" height="20" rx="10" fill="#dafbe1" stroke="#4ac26b"/>
+  <text x="400" y="308" font-size="10.5" font-weight="bold" fill="#1a7f37" text-anchor="middle">Restored Smooth &bull; uint8 [0, 255]</text>
+
+  <!-- ================= STAGE 3: SEGMENTATION ================= -->
+  <rect x="180" y="326" width="440" height="68" rx="8" fill="#fff8f2" stroke="#bc4c00" stroke-width="2" filter="url(#shadow)"/>
+  <rect x="180" y="326" width="440" height="24" rx="8" fill="#bc4c00"/>
+  <text x="400" y="342" font-size="12" font-weight="bold" fill="#ffffff" text-anchor="middle">STAGE 3: Local Adaptive Segmentation (Pure NumPy)</text>
+  <text x="400" y="364" font-size="11.5" fill="#1f2328" text-anchor="middle">&bull; Local Gaussian Adaptive Threshold: T(x,y) = &mu;<sub>G</sub>(x,y) - C (Block = 17, C = 4.0)</text>
+  <text x="400" y="381" font-size="11" fill="#57606a" text-anchor="middle">Vectorized separable 1D Gaussian kernel; dynamically adapts to shadows</text>
+
+  <!-- Flow 4 -->
+  <line x1="400" y1="394" x2="400" y2="434" stroke="#bc4c00" stroke-width="2.5" marker-end="url(#arrow)"/>
+  <rect x="310" y="404" width="180" height="20" rx="10" fill="#fff1e5" stroke="#ff9b5e"/>
+  <text x="400" y="418" font-size="10.5" font-weight="bold" fill="#bc4c00" text-anchor="middle">Raw Binary Mask &bull; uint8 {0, 255}</text>
+
+  <!-- ================= STAGE 4: MORPHOLOGICAL REFINEMENT ================= -->
+  <rect x="180" y="436" width="440" height="72" rx="8" fill="#fbf0ff" stroke="#8250df" stroke-width="2" filter="url(#shadow)"/>
+  <rect x="180" y="436" width="440" height="24" rx="8" fill="#8250df"/>
+  <text x="400" y="452" font-size="12" font-weight="bold" fill="#ffffff" text-anchor="middle">STAGE 4: Morphological Refinement &amp; Area Filtering</text>
+  <text x="400" y="474" font-size="11.5" fill="#1f2328" text-anchor="middle">&bull; Directional Morphological Closing: (A &oplus; B) &ominus; B (3&times;3 Elliptical SE &rarr; Bridges hairline breaks)</text>
+  <text x="400" y="492" font-size="11.5" fill="#1f2328" text-anchor="middle">&bull; Small-Object Area Opening: Prunes isolated dark concrete pores (&lt; 20 px)</text>
+
+  <!-- Flow 5 -->
+  <line x1="400" y1="508" x2="400" y2="548" stroke="#8250df" stroke-width="2.5" marker-end="url(#arrow)"/>
+  <rect x="305" y="518" width="190" height="20" rx="10" fill="#fbefff" stroke="#d299ff"/>
+  <text x="400" y="532" font-size="10.5" font-weight="bold" fill="#8250df" text-anchor="middle">Refined Crack Mask &bull; uint8 {0, 255}</text>
+
+  <!-- ================= STAGE 5: MEASUREMENT & DECISION ================= -->
+  <rect x="160" y="550" width="480" height="60" rx="8" fill="#24292f" stroke="#1f2328" stroke-width="2" filter="url(#shadow)"/>
+  <text x="400" y="572" font-size="13" font-weight="bold" fill="#58a6ff" text-anchor="middle">STAGE 5: Connected Measurement &amp; Civil Engineering Decision Rule</text>
+  <text x="400" y="594" font-size="11.5" fill="#ffffff" text-anchor="middle">
+    Cracked Area &lt; 0.20%: <tspan fill="#3fb950" font-weight="bold">[PASS - Safe]</tspan> &bull; 
+    0.20% &ndash; 1.20%: <tspan fill="#d29922" font-weight="bold">[MONITOR]</tspan> &bull; 
+    &gt; 1.20%: <tspan fill="#f85149" font-weight="bold">[FAIL - Critical Repair]</tspan>
+  </text>
+</svg>
+</div>
+
 <ul>
 <li><strong>Pipeline A (Spatial Enhancement + Otsu):</strong> Employs power-law gamma transformation ($\gamma = 0.80$) to expand dark crack intensities, followed by contrast stretching and global Otsu thresholding.</li>
 <li><strong>Pipeline B (Frequency Restoration + Adaptive Segmentation):</strong> Introduces a 2D Butterworth low-pass filter ($D_0 = 40.0, n = 2$) in the frequency domain to suppress granular aggregate texture, followed by local adaptive Gaussian thresholding ($17 \times 17$ block, $C = 4.0$).</li>
