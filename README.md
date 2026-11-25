@@ -78,8 +78,26 @@ concrete_crack_inspection/
 ├── app/                           # Interactive Streamlit Web Application
 │   └── app.py
 └── report/                        # Final technical report & presentation slides
-    ├── report.md                  # Full IEEE 2-column format conference paper
-    └── presentation_slides.md     # 10-minute pitch deck outline
+    ├── report.pdf                 # Publication-grade IEEE conference paper PDF (Graded deliverable)
+    ├── report.html                # Interactive HTML report with visual block diagrams & KaTeX
+    ├── report.md                  # Markdown source paper
+    ├── presentation_slides.pdf    # 10-minute presentation slides PDF (Graded deliverable)
+    ├── presentation_slides.html   # Interactive slide presentation with arrow navigation
+    └── presentation_slides.md     # Markdown slide deck outline
+```
+
+### Production 5-Stage Pipeline Architecture (Pipeline C)
+
+```mermaid
+flowchart LR
+    In["Raw Image<br/><b>uint8 [0, 255]</b>"] -->|"uint8 [0, 255]"| S1["Stage 1: Spatial Enh<br/>Gamma γ=0.80 + Stretch"]
+    S1 -->|"uint8 [0, 255]"| S2["Stage 2: Freq Restoration<br/>2D Butterworth D0=40"]
+    S2 -->|"uint8 [0, 255]"| S3["Stage 3: Adaptive Seg<br/>Gaussian 17×17, C=4.0"]
+    S3 -->|"binary uint8 {0, 255}"| S4["Stage 4: Morphology<br/>Closing 3×3 + Area Filter"]
+    S4 -->|"binary uint8 {0, 255}"| S5["Stage 5: Decision Engine<br/>CCA + Safety Rule"]
+    S5 --> Out1["Binary Mask<br/><b>binary uint8 {0, 255}</b>"]
+    S5 --> Out2["Diagnostic Overlay<br/><b>RGB uint8 [0, 255]</b>"]
+    S5 --> Out3["Verdict: <b>PASS / MONITOR / FAIL</b>"]
 ```
 
 ---

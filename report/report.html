@@ -3,126 +3,377 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CSE281 DIP Technical Report</title>
+    <title>CSE281 DIP Technical Report - Concrete Crack Inspection</title>
     
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Times+New+Roman&family=Arial:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Merriweather:ital,wght@0,300;0,400;0,700;1,300&family=JetBrains+Mono:wght@400;500&display=swap');
+
+:root {
+    --primary: #1e3a8a;
+    --primary-light: #eff6ff;
+    --accent: #2563eb;
+    --stage1: #0284c7;
+    --stage2: #7c3aed;
+    --stage3: #d97706;
+    --stage4: #059669;
+    --stage5: #e11d48;
+    --dark: #0f172a;
+    --gray-bg: #f8fafc;
+    --card-border: #e2e8f0;
+}
 
 body {
-    font-family: 'Times New Roman', Times, serif;
-    font-size: 10pt;
-    line-height: 1.35;
-    color: #111;
-    margin: 40px auto;
-    max-width: 900px;
-    padding: 20px;
-    background: #fff;
+    font-family: 'Merriweather', Georgia, serif;
+    font-size: 10.5pt;
+    line-height: 1.6;
+    color: #1e293b;
+    margin: 30px auto;
+    max-width: 960px;
+    padding: 30px;
+    background: #ffffff;
 }
 
-h1.title {
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Inter', sans-serif;
+    color: #0f172a;
+    font-weight: 700;
+}
+
+h1.doc-title {
+    font-size: 20pt;
     text-align: center;
-    font-size: 18pt;
-    font-weight: bold;
-    margin-bottom: 8px;
-    font-family: 'Arial', sans-serif;
+    color: #0f172a;
+    margin-bottom: 6px;
+    line-height: 1.25;
 }
 
-.subtitle {
+.doc-subtitle {
     text-align: center;
     font-size: 11pt;
-    color: #444;
+    color: #64748b;
     margin-bottom: 25px;
+    font-family: 'Inter', sans-serif;
+}
+
+.author-block {
+    text-align: center;
+    font-family: 'Inter', sans-serif;
+    font-size: 9.5pt;
+    color: #334155;
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.abstract-box {
+    background: #f8fafc;
+    border-left: 4px solid #1e3a8a;
+    padding: 16px 20px;
+    margin: 20px 0;
+    font-size: 9.5pt;
     font-style: italic;
-}
-
-.content-columns {
-    column-count: 2;
-    column-gap: 24px;
-    column-rule: 1px solid #ddd;
-    text-align: justify;
-}
-
-h1, h2, h3, h4 {
-    font-family: 'Arial', sans-serif;
-    color: #0d233a;
-    margin-top: 16px;
-    margin-bottom: 6px;
+    border-radius: 0 8px 8px 0;
 }
 
 h2 {
-    font-size: 11pt;
+    font-size: 13pt;
+    border-bottom: 2px solid #0f172a;
+    padding-bottom: 4px;
+    margin-top: 32px;
+    margin-bottom: 12px;
     text-transform: uppercase;
-    border-bottom: 1px solid #0d233a;
-    padding-bottom: 2px;
+    letter-spacing: 0.5px;
 }
 
 h3 {
+    font-size: 11pt;
+    color: #1e3a8a;
+    margin-top: 20px;
+    margin-bottom: 8px;
+}
+
+h4 {
     font-size: 10pt;
-    font-weight: bold;
+    color: #334155;
+    margin-top: 14px;
+    margin-bottom: 6px;
 }
 
 table {
     width: 100%;
     border-collapse: collapse;
-    margin: 12px 0;
+    margin: 16px 0;
     font-size: 8.5pt;
+    font-family: 'Inter', sans-serif;
 }
 
 th, td {
-    border: 1px solid #aaa;
-    padding: 5px 7px;
+    border: 1px solid #cbd5e1;
+    padding: 7px 10px;
     text-align: left;
 }
 
 th {
-    background-color: #f2f4f8;
-    font-weight: bold;
+    background-color: #f1f5f9;
+    font-weight: 700;
+    color: #0f172a;
+}
+
+tr:nth-child(even) {
+    background-color: #f8fafc;
 }
 
 code {
-    font-family: 'Courier New', monospace;
+    font-family: 'JetBrains Mono', Consolas, monospace;
     font-size: 8.5pt;
-    background: #f4f4f4;
-    padding: 1px 3px;
-    border-radius: 3px;
+    background: #f1f5f9;
+    padding: 2px 4px;
+    border-radius: 4px;
+    color: #0f172a;
 }
 
 pre {
-    background: #f8f9fa;
-    border: 1px solid #e1e4e8;
-    padding: 8px;
-    font-size: 8pt;
+    background: #0f172a;
+    color: #f8fafc;
+    border-radius: 6px;
+    padding: 12px;
+    font-size: 8.5pt;
     overflow-x: auto;
-    break-inside: avoid;
+    font-family: 'JetBrains Mono', monospace;
 }
 
-blockquote {
-    border-left: 3px solid #0056b3;
-    margin: 8px 0;
-    padding-left: 10px;
-    color: #555;
-    font-style: italic;
+pre code {
+    background: transparent;
+    color: inherit;
+    padding: 0;
 }
 
-.abstract-box {
-    margin: 0 auto 25px auto;
-    padding: 12px 18px;
-    background: #fcfcfc;
-    border-left: 4px solid #0d233a;
-    font-size: 9.5pt;
-    text-align: justify;
+/* ==============================================================
+   PROFESSIONAL PUBLICATION BLOCK DIAGRAMS (PIPELINES A, B, C)
+   ============================================================== */
+.architecture-container {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 20px;
+    margin: 25px 0;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    font-family: 'Inter', sans-serif;
 }
 
-.abstract-heading {
-    font-weight: bold;
-    font-family: 'Arial', sans-serif;
+.arch-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #cbd5e1;
+    padding-bottom: 10px;
+    margin-bottom: 16px;
+}
+
+.arch-title {
+    font-size: 12pt;
+    font-weight: 800;
+    color: #0f172a;
+}
+
+.arch-badge {
+    background: #1e3a8a;
+    color: white;
+    font-size: 7.5pt;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 9999px;
+    text-transform: uppercase;
+}
+
+.pipeline-flow {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.stage-card {
+    background: white;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 12px 16px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.stage-card.stage-input {
+    border-left: 6px solid #64748b;
+    background: #f8fafc;
+}
+.stage-card.stage-enhancement {
+    border-left: 6px solid var(--stage1);
+}
+.stage-card.stage-restoration {
+    border-left: 6px solid var(--stage2);
+}
+.stage-card.stage-segmentation {
+    border-left: 6px solid var(--stage3);
+}
+.stage-card.stage-morphology {
+    border-left: 6px solid var(--stage4);
+}
+.stage-card.stage-measurement {
+    border-left: 6px solid var(--stage5);
+}
+.stage-card.stage-output {
+    border-left: 6px solid #0f172a;
+    background: #f1f5f9;
+}
+
+.stage-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+}
+
+.stage-name {
+    font-size: 10pt;
+    font-weight: 700;
+    color: #0f172a;
+}
+
+.stage-tag {
+    font-size: 7pt;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 4px;
+    text-transform: uppercase;
+}
+
+.tag-blue { background: #e0f2fe; color: #0369a1; }
+.tag-purple { background: #f3e8ff; color: #6b21a8; }
+.tag-amber { background: #fef3c7; color: #b45309; }
+.tag-emerald { background: #d1fae5; color: #047857; }
+.tag-rose { background: #ffe4e6; color: #be123c; }
+.tag-slate { background: #e2e8f0; color: #334155; }
+
+.stage-desc {
+    font-size: 8.5pt;
+    color: #475569;
+    margin: 4px 0;
+}
+
+.stage-methods {
+    list-style: none;
+    padding-left: 0;
+    margin: 4px 0 0 0;
+    font-size: 8pt;
+    color: #334155;
+}
+
+.stage-methods li {
+    margin-bottom: 2px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.stage-methods li::before {
+    content: "•";
+    color: #94a3b8;
+    font-size: 10pt;
+}
+
+.bus-connector {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px 0;
+    position: relative;
+}
+
+.bus-line {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: #cbd5e1;
+    z-index: 1;
+}
+
+.bus-badge {
+    position: relative;
+    z-index: 2;
+    background: #ffffff;
+    border: 1.5px solid #0284c7;
+    border-radius: 9999px;
+    padding: 3px 12px;
+    font-size: 7.5pt;
+    font-weight: 700;
+    color: #0369a1;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.bus-badge-type {
+    background: #0284c7;
+    color: white;
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-family: 'JetBrains Mono', monospace;
+}
+
+.bus-badge-range {
+    color: #0f172a;
+    font-family: 'JetBrains Mono', monospace;
+}
+
+.bus-badge-dim {
+    color: #64748b;
+    font-weight: 500;
+}
+
+.bus-arrow {
+    display: flex;
+    justify-content: center;
+    color: #0284c7;
+    font-size: 11pt;
+    margin-top: -2px;
+}
+
+.grid-2col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin: 16px 0;
+}
+
+@media (max-width: 768px) {
+    .grid-2col { grid-template-columns: 1fr; }
 }
 
 @media print {
-    body { max-width: 100%; margin: 0; padding: 0; }
-    .content-columns { column-count: 2; }
+    body {
+        margin: 0;
+        padding: 12mm 15mm;
+        font-size: 9pt;
+        max-width: 100%;
+    }
+    .architecture-container {
+        page-break-inside: avoid;
+        break-inside: avoid;
+        padding: 10px;
+        margin: 10px 0;
+    }
+    .stage-card {
+        padding: 8px 10px;
+    }
+    h2 {
+        page-break-after: avoid;
+    }
 }
 </style>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}]});"></script>
 
 </head>
 <body>
@@ -172,108 +423,677 @@ IoU simultaneously penalizes false alarms (FP) and missed crack segments (FN) di
 <h3>3.1 Data Preparation and Split Discipline</h3>
 <p>The 118 paired images were split into a Development Set of 82 images (70%) and a Held-Out Test Set of 36 images (30%) using a fixed random seed (42). All hyperparameter tuning, filter kernel design, and threshold selection were conducted exclusively on the Development Set. The Test Set remained locked and was evaluated exactly once.</p>
 <p>A unified loading pipeline converts all input images to standardized grayscale floating-point arrays normalized to $[0, 255]$. Controlled noise degradation functions for additive Gaussian ($\sigma \in {10, 25, 50}$), Salt-and-Pepper ($p \in {0.01, 0.03, 0.05}$), Speckle, and Poisson noise were implemented to evaluate filter robustness.</p>
-<h3>3.2 Baseline Pipelines</h3>
-<p>Two mandatory baselines establish the performance floor:
-1. <strong>Trivial Baseline:</strong> A fixed global intensity threshold at $T = 127$ on raw grayscale images.
-2. <strong>Simple Baseline:</strong> Global Otsu thresholding followed by a single $3 \times 3$ rectangular morphological opening.</p>
-<h3>3.3 Proposed Pipelines of Increasing Sophistication</h3>
+<h3>3.2 Baseline Architectures</h3>
+<p>Two standard benchmark baselines establish the performance floor and justify the necessity of multi-stage engineering:
+1. <strong>Trivial Baseline (Fixed Global Threshold):</strong>
+   - Applies a constant intensity cutoff at $T = 127$ on the raw grayscale image.
+   - Binarization: $B(x, y) = 255$ if $I(x, y) &lt; 127$ else $0$.
+2. <strong>Simple Baseline (Global Otsu + 3x3 Opening):</strong>
+   - Applies Otsu's global variance-maximization threshold $T^*$ followed by a $3 \times 3$ square morphological opening ($B_{\text{open}} = (A \ominus K_{3\times 3}) \oplus K_{3\times 3}$).</p>
 
-<div style="text-align: center; margin: 25px auto; max-width: 820px; background: #ffffff; border: 1px solid #d0d7de; border-radius: 8px; padding: 18px; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
-<div style="font-weight: bold; font-family: 'Arial', sans-serif; font-size: 13pt; color: #0969da; margin-bottom: 12px;">
-    Figure 1: Full Engineering Block Diagram of Proposed Pipeline C (Final Advanced Production Architecture)
+<div class="architecture-container">
+    <div class="arch-header">
+        <span class="arch-title">MANDATORY COURSE BENCHMARK BASELINES</span>
+        <span class="arch-badge">Performance Floor</span>
+    </div>
+    <div class="grid-2col">
+        <!-- Trivial Baseline -->
+        <div class="pipeline-flow">
+            <div class="stage-card stage-input">
+                <div class="stage-card-header">
+                    <span class="stage-name">TRIVIAL BASELINE INPUT</span>
+                    <span class="stage-tag tag-slate">uint8 [0, 255]</span>
+                </div>
+                <div class="stage-desc">Raw uncalibrated grayscale concrete image (480 × 320).</div>
+            </div>
+            <div class="bus-connector">
+                <div class="bus-line"></div>
+                <div class="bus-badge"><span class="bus-badge-type">uint8</span> <span class="bus-badge-range">[0, 255]</span></div>
+            </div>
+            <div class="stage-card stage-segmentation">
+                <div class="stage-card-header">
+                    <span class="stage-name">FIXED INTENSITY THRESHOLD</span>
+                    <span class="stage-tag tag-amber">T = 127</span>
+                </div>
+                <div class="stage-desc">$B(x, y) = 255$ if $I(x, y) < 127$ else $0$.</div>
+            </div>
+            <div class="bus-connector">
+                <div class="bus-line"></div>
+                <div class="bus-badge"><span class="bus-badge-type">binary uint8</span> <span class="bus-badge-range">{0, 255}</span></div>
+            </div>
+            <div class="stage-card stage-output">
+                <div class="stage-card-header">
+                    <span class="stage-name">TRIVIAL OUTPUT MASK</span>
+                    <span class="stage-tag tag-slate">IoU: 0.0552</span>
+                </div>
+                <div class="stage-desc">37.47% Area Error | High false positive rate.</div>
+            </div>
+        </div>
+
+        <!-- Simple Baseline -->
+        <div class="pipeline-flow">
+            <div class="stage-card stage-input">
+                <div class="stage-card-header">
+                    <span class="stage-name">SIMPLE BASELINE INPUT</span>
+                    <span class="stage-tag tag-slate">uint8 [0, 255]</span>
+                </div>
+                <div class="stage-desc">Raw uncalibrated grayscale concrete image (480 × 320).</div>
+            </div>
+            <div class="bus-connector">
+                <div class="bus-line"></div>
+                <div class="bus-badge"><span class="bus-badge-type">uint8</span> <span class="bus-badge-range">[0, 255]</span></div>
+            </div>
+            <div class="stage-card stage-segmentation">
+                <div class="stage-card-header">
+                    <span class="stage-name">GLOBAL OTSU THRESHOLD</span>
+                    <span class="stage-tag tag-amber">Otsu $T^*$</span>
+                </div>
+                <div class="stage-desc">Maximizes between-class variance on raw image.</div>
+            </div>
+            <div class="bus-connector">
+                <div class="bus-line"></div>
+                <div class="bus-badge"><span class="bus-badge-type">binary uint8</span> <span class="bus-badge-range">{0, 255}</span></div>
+            </div>
+            <div class="stage-card stage-morphology">
+                <div class="stage-card-header">
+                    <span class="stage-name">MORPHOLOGICAL OPENING</span>
+                    <span class="stage-tag tag-emerald">3 × 3 Square</span>
+                </div>
+                <div class="stage-desc">Erosion followed by dilation with square kernel.</div>
+            </div>
+            <div class="bus-connector">
+                <div class="bus-line"></div>
+                <div class="bus-badge"><span class="bus-badge-type">binary uint8</span> <span class="bus-badge-range">{0, 255}</span></div>
+            </div>
+            <div class="stage-card stage-output">
+                <div class="stage-card-header">
+                    <span class="stage-name">SIMPLE OUTPUT MASK</span>
+                    <span class="stage-tag tag-slate">IoU: 0.0474</span>
+                </div>
+                <div class="stage-desc">26.98% Area Error | Prunes thin cracks.</div>
+            </div>
+        </div>
+    </div>
 </div>
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 620" style="width: 100%; height: auto; font-family: 'Arial', sans-serif;">
-  <defs>
-    <!-- Arrow Marker -->
-    <marker id="arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-      <path d="M 0 1 L 10 5 L 0 9 z" fill="#0969da" />
-    </marker>
-    <filter id="shadow" x="-5%" y="-5%" width="110%" height="115%" filterUnits="userSpaceOnUse">
-      <feDropShadow dx="1" dy="2" stdDeviation="2" flood-color="#000000" flood-opacity="0.08"/>
-    </filter>
-  </defs>
 
-  <!-- ================= INPUT NODE ================= -->
-  <rect x="250" y="15" width="300" height="45" rx="6" fill="#f6f8fa" stroke="#d0d7de" stroke-width="2" filter="url(#shadow)"/>
-  <text x="400" y="35" font-size="13" font-weight="bold" fill="#24292f" text-anchor="middle">Input: Concrete Surface Photograph</text>
-  <text x="400" y="50" font-size="11" fill="#57606a" text-anchor="middle">24-bit RGB / Standard Grayscale</text>
+<hr />
+<h3>3.3 Proposed Pipelines of Increasing Sophistication</h3>
+<p>To systematically conquer challenging real-world concrete inspection conditions (aggregate texture, illumination shadows, and hairline discontinuities), three complete pipelines of increasing sophistication were designed, implemented, and benchmarked. In strict compliance with course specifications (Page 5), explicit block diagrams with exact inter-stage data types and value ranges are detailed below.</p>
+<h4>3.3.1 Pipeline A: Spatial Contrast Enhancement + Global Otsu</h4>
+<p>Pipeline A couples spatial non-linear gamma expansion and percentile contrast stretching with automatic Otsu thresholding.</p>
 
-  <!-- Flow 1 -->
-  <line x1="400" y1="60" x2="400" y2="100" stroke="#0969da" stroke-width="2.5" marker-end="url(#arrow)"/>
-  <rect x="330" y="70" width="140" height="20" rx="10" fill="#ddf4ff" stroke="#54aeff"/>
-  <text x="400" y="84" font-size="10.5" font-weight="bold" fill="#0969da" text-anchor="middle">uint8 &bull; range [0, 255]</text>
+<div class="architecture-container">
+    <div class="arch-header">
+        <span class="arch-title">PIPELINE A: SPATIAL CONTRAST ENHANCEMENT + GLOBAL OTSU</span>
+        <span class="arch-badge">Baseline Track A (Spatial + Global)</span>
+    </div>
+    <div class="pipeline-flow">
+        <!-- Input -->
+        <div class="stage-card stage-input">
+            <div class="stage-card-header">
+                <span class="stage-name">INPUT: RAW CONCRETE SURFACE IMAGE</span>
+                <span class="stage-tag tag-slate">Uncalibrated Acquisition</span>
+            </div>
+            <div class="stage-desc">Weathered concrete specimen with non-uniform illumination and gravel aggregate texture.</div>
+        </div>
 
-  <!-- ================= STAGE 1: SPATIAL ENHANCEMENT ================= -->
-  <rect x="200" y="102" width="400" height="65" rx="8" fill="#f0f6ff" stroke="#0969da" stroke-width="2" filter="url(#shadow)"/>
-  <rect x="200" y="102" width="400" height="24" rx="8" fill="#0969da"/>
-  <text x="400" y="118" font-size="12" font-weight="bold" fill="#ffffff" text-anchor="middle">STAGE 1: Spatial Contrast Enhancement</text>
-  <text x="400" y="140" font-size="11.5" fill="#1f2328" text-anchor="middle">&bull; Power-law Gamma Transformation (s = c &middot; r<sup>&gamma;</sup>, &gamma; = 0.80)</text>
-  <text x="400" y="156" font-size="11" fill="#57606a" text-anchor="middle">Expands dark dynamic range to accentuate micro-crack depressions</text>
+        <!-- Bus 1 -->
+        <div class="bus-connector">
+            <div class="bus-line"></div>
+            <div class="bus-badge">
+                <span class="bus-badge-type">uint8</span>
+                <span class="bus-badge-range">Range: [0, 255]</span>
+                <span class="bus-badge-dim">Dim: 480 × 320</span>
+            </div>
+        </div>
+        <div class="bus-arrow">▼</div>
 
-  <!-- Flow 2 -->
-  <line x1="400" y1="167" x2="400" y2="207" stroke="#0969da" stroke-width="2.5" marker-end="url(#arrow)"/>
-  <rect x="315" y="177" width="170" height="20" rx="10" fill="#ddf4ff" stroke="#54aeff"/>
-  <text x="400" y="191" font-size="10.5" font-weight="bold" fill="#0969da" text-anchor="middle">Enhanced Image &bull; uint8 [0, 255]</text>
+        <!-- Stage 1 -->
+        <div class="stage-card stage-enhancement">
+            <div class="stage-card-header">
+                <span class="stage-name">STAGE 1: SPATIAL CONTRAST ENHANCEMENT</span>
+                <span class="stage-tag tag-blue">Spatial Domain</span>
+            </div>
+            <div class="stage-desc">Expands dark shadow regions non-linearly to separate narrow fissures from background.</div>
+            <ul class="stage-methods">
+                <li><b>Power-Law Gamma:</b> $s = c \cdot r^\gamma$ with $\gamma = 0.80$ (decompresses low-intensity values).</li>
+                <li><b>Percentile Linear Contrast Stretch:</b> Maps 2nd percentile $p_2$ to 0, 98th percentile $p_{98}$ to 255.</li>
+            </ul>
+        </div>
 
-  <!-- ================= STAGE 2: FREQUENCY RESTORATION ================= -->
-  <rect x="180" y="209" width="440" height="75" rx="8" fill="#f0fff4" stroke="#1a7f37" stroke-width="2" filter="url(#shadow)"/>
-  <rect x="180" y="209" width="440" height="24" rx="8" fill="#1a7f37"/>
-  <text x="400" y="225" font-size="12" font-weight="bold" fill="#ffffff" text-anchor="middle">STAGE 2: Frequency-Domain Noise Restoration (Pure NumPy)</text>
-  <text x="400" y="247" font-size="11.5" fill="#1f2328" text-anchor="middle">&bull; 2D Fast Fourier Transform (FFT) &amp; Centered Log-Spectrum</text>
-  <text x="400" y="262" font-size="11.5" fill="#1f2328" text-anchor="middle">&bull; 2D Butterworth Low-Pass Filter: H(u,v) = 1 / [1 + (D(u,v)/D<sub>0</sub>)<sup>2n</sup>], D<sub>0</sub> = 40, n = 2</text>
-  <text x="400" y="277" font-size="10.5" fill="#57606a" text-anchor="middle">Attenuates high-frequency aggregate gravel noise without spatial ringing</text>
+        <!-- Bus 2 -->
+        <div class="bus-connector">
+            <div class="bus-line"></div>
+            <div class="bus-badge">
+                <span class="bus-badge-type">uint8</span>
+                <span class="bus-badge-range">Range: [0, 255]</span>
+                <span class="bus-badge-dim">Dim: 480 × 320 (Enhanced Dynamic Range)</span>
+            </div>
+        </div>
+        <div class="bus-arrow">▼</div>
 
-  <!-- Flow 3 -->
-  <line x1="400" y1="284" x2="400" y2="324" stroke="#1a7f37" stroke-width="2.5" marker-end="url(#arrow)"/>
-  <rect x="315" y="294" width="170" height="20" rx="10" fill="#dafbe1" stroke="#4ac26b"/>
-  <text x="400" y="308" font-size="10.5" font-weight="bold" fill="#1a7f37" text-anchor="middle">Restored Smooth &bull; uint8 [0, 255]</text>
+        <!-- Stage 2 -->
+        <div class="stage-card stage-segmentation">
+            <div class="stage-card-header">
+                <span class="stage-name">STAGE 2: GLOBAL OTSU THRESHOLDING</span>
+                <span class="stage-tag tag-amber">Global Binarization</span>
+            </div>
+            <div class="stage-desc">Exhaustively searches 1D histogram to maximize inter-class intensity variance.</div>
+            <ul class="stage-methods">
+                <li><b>Variance Maximization:</b> $T^* = \arg\max_t \omega_0(t)\omega_1(t)[\mu_0(t) - \mu_1(t)]^2$.</li>
+                <li><b>Binarization & Polarity Inversion:</b> Pixel values $< T^*$ assigned 255 (cracks), else 0.</li>
+            </ul>
+        </div>
 
-  <!-- ================= STAGE 3: SEGMENTATION ================= -->
-  <rect x="180" y="326" width="440" height="68" rx="8" fill="#fff8f2" stroke="#bc4c00" stroke-width="2" filter="url(#shadow)"/>
-  <rect x="180" y="326" width="440" height="24" rx="8" fill="#bc4c00"/>
-  <text x="400" y="342" font-size="12" font-weight="bold" fill="#ffffff" text-anchor="middle">STAGE 3: Local Adaptive Segmentation (Pure NumPy)</text>
-  <text x="400" y="364" font-size="11.5" fill="#1f2328" text-anchor="middle">&bull; Local Gaussian Adaptive Threshold: T(x,y) = &mu;<sub>G</sub>(x,y) - C (Block = 17, C = 4.0)</text>
-  <text x="400" y="381" font-size="11" fill="#57606a" text-anchor="middle">Vectorized separable 1D Gaussian kernel; dynamically adapts to shadows</text>
+        <!-- Bus 3 -->
+        <div class="bus-connector">
+            <div class="bus-line"></div>
+            <div class="bus-badge" style="border-color: #059669; color: #047857;">
+                <span class="bus-badge-type" style="background: #059669;">binary uint8</span>
+                <span class="bus-badge-range">Values: {0, 255}</span>
+                <span class="bus-badge-dim">Dim: 480 × 320</span>
+            </div>
+        </div>
+        <div class="bus-arrow" style="color: #059669;">▼</div>
 
-  <!-- Flow 4 -->
-  <line x1="400" y1="394" x2="400" y2="434" stroke="#bc4c00" stroke-width="2.5" marker-end="url(#arrow)"/>
-  <rect x="310" y="404" width="180" height="20" rx="10" fill="#fff1e5" stroke="#ff9b5e"/>
-  <text x="400" y="418" font-size="10.5" font-weight="bold" fill="#bc4c00" text-anchor="middle">Raw Binary Mask &bull; uint8 {0, 255}</text>
-
-  <!-- ================= STAGE 4: MORPHOLOGICAL REFINEMENT ================= -->
-  <rect x="180" y="436" width="440" height="72" rx="8" fill="#fbf0ff" stroke="#8250df" stroke-width="2" filter="url(#shadow)"/>
-  <rect x="180" y="436" width="440" height="24" rx="8" fill="#8250df"/>
-  <text x="400" y="452" font-size="12" font-weight="bold" fill="#ffffff" text-anchor="middle">STAGE 4: Morphological Refinement &amp; Area Filtering</text>
-  <text x="400" y="474" font-size="11.5" fill="#1f2328" text-anchor="middle">&bull; Directional Morphological Closing: (A &oplus; B) &ominus; B (3&times;3 Elliptical SE &rarr; Bridges hairline breaks)</text>
-  <text x="400" y="492" font-size="11.5" fill="#1f2328" text-anchor="middle">&bull; Small-Object Area Opening: Prunes isolated dark concrete pores (&lt; 20 px)</text>
-
-  <!-- Flow 5 -->
-  <line x1="400" y1="508" x2="400" y2="548" stroke="#8250df" stroke-width="2.5" marker-end="url(#arrow)"/>
-  <rect x="305" y="518" width="190" height="20" rx="10" fill="#fbefff" stroke="#d299ff"/>
-  <text x="400" y="532" font-size="10.5" font-weight="bold" fill="#8250df" text-anchor="middle">Refined Crack Mask &bull; uint8 {0, 255}</text>
-
-  <!-- ================= STAGE 5: MEASUREMENT & DECISION ================= -->
-  <rect x="160" y="550" width="480" height="60" rx="8" fill="#24292f" stroke="#1f2328" stroke-width="2" filter="url(#shadow)"/>
-  <text x="400" y="572" font-size="13" font-weight="bold" fill="#58a6ff" text-anchor="middle">STAGE 5: Connected Measurement &amp; Civil Engineering Decision Rule</text>
-  <text x="400" y="594" font-size="11.5" fill="#ffffff" text-anchor="middle">
-    Cracked Area &lt; 0.20%: <tspan fill="#3fb950" font-weight="bold">[PASS - Safe]</tspan> &bull; 
-    0.20% &ndash; 1.20%: <tspan fill="#d29922" font-weight="bold">[MONITOR]</tspan> &bull; 
-    &gt; 1.20%: <tspan fill="#f85149" font-weight="bold">[FAIL - Critical Repair]</tspan>
-  </text>
-</svg>
+        <!-- Output -->
+        <div class="stage-card stage-output">
+            <div class="stage-card-header">
+                <span class="stage-name">OUTPUT: PIPELINE A BINARY CRACK MASK</span>
+                <span class="stage-tag tag-slate">Test IoU: 0.0303 | Latency: 12.8 ms</span>
+            </div>
+            <div class="stage-desc"><b>Engineering Finding:</b> Global threshold completely fails under outdoor natural illumination gradients, falsely classifying shaded concrete as continuous cracks.</div>
+        </div>
+    </div>
 </div>
 
 <ul>
-<li><strong>Pipeline A (Spatial Enhancement + Otsu):</strong> Employs power-law gamma transformation ($\gamma = 0.80$) to expand dark crack intensities, followed by contrast stretching and global Otsu thresholding.</li>
-<li><strong>Pipeline B (Frequency Restoration + Adaptive Segmentation):</strong> Introduces a 2D Butterworth low-pass filter ($D_0 = 40.0, n = 2$) in the frequency domain to suppress granular aggregate texture, followed by local adaptive Gaussian thresholding ($17 \times 17$ block, $C = 4.0$).</li>
-<li><strong>Pipeline C (Final Advanced Production Pipeline):</strong> The complete five-stage architecture integrating:</li>
-<li>Spatial enhancement ($\gamma = 0.85$, contrast stretch between 2nd and 98th percentiles);</li>
-<li>2D Butterworth frequency low-pass filtering ($D_0 = 45.0, n = 2$);</li>
-<li>Local adaptive Gaussian thresholding confirmed by Sobel gradient magnitude ($|\nabla I| &gt; 15$);</li>
-<li>Morphological directional closing ($5 \times 5$ ellipse) to reconnect hairline breaks, small-object area opening to eliminate isolated dark pores ($&lt;40$ px), and morphological reconstruction for hole filling;</li>
-<li>Structural assessment engine calculating crack metrics and the safety verdict.</li>
+<li><strong>Stage 1 (Spatial Enhancement):</strong> Power-law gamma transformation ($\gamma = 0.80$) non-linearly stretches dark shadow regions, pulling narrow crack depressions out of the noise floor. Percentile stretching across $[p_2, p_{98}]$ eliminates outlier pixel saturation and scales dynamic range to full $[0, 255]$.</li>
+<li><em>Inter-Stage Transfer:</em> Grayscale image, <strong>Data Type: <code>uint8</code></strong>, <strong>Value Range: <code>[0, 255]</code></strong>, Dimensions: $480 \times 320$.</li>
+<li><strong>Stage 2 (Global Segmentation):</strong> Otsu’s algorithm exhaustively searches the 1D histogram to compute threshold $T^<em> = \arg\max_t \sigma_B^2(t)$. Pixels below $T^</em>$ are assigned foreground value $255$.</li>
+<li><em>Output:</em> Binary mask, <strong>Data Type: <code>binary uint8</code></strong>, <strong>Value Range: <code>{0, 255}</code></strong>, Dimensions: $480 \times 320$.</li>
+<li><em>Engineering Finding:</em> While computationally light (12.8 ms), Pipeline A achieves only $\text{IoU} = 0.0303$ due to global threshold failure under natural outdoor illumination gradients.</li>
 </ul>
 <hr />
+<h4>3.3.2 Pipeline B: Frequency-Domain Restoration + Local Adaptive Segmentation</h4>
+<p>Pipeline B introduces 2D Fourier-domain Butterworth low-pass filtering to attenuate high-frequency concrete aggregate speckle, followed by local Gaussian adaptive thresholding.</p>
+
+<div class="architecture-container">
+    <div class="arch-header">
+        <span class="arch-title">PIPELINE B: FREQUENCY RESTORATION + LOCAL ADAPTIVE SEGMENTATION</span>
+        <span class="arch-badge">Track B (Fourier Frequency Filtering)</span>
+    </div>
+    <div class="pipeline-flow">
+        <!-- Input -->
+        <div class="stage-card stage-input">
+            <div class="stage-card-header">
+                <span class="stage-name">INPUT: RAW CONCRETE SURFACE IMAGE</span>
+                <span class="stage-tag tag-slate">Input Tensor</span>
+            </div>
+            <div class="stage-desc">Standardized grayscale image: <b>Data Type: uint8</b>, <b>Range: [0, 255]</b>, <b>Dim: 480 × 320</b>.</div>
+        </div>
+
+        <!-- Bus 1 -->
+        <div class="bus-connector">
+            <div class="bus-line"></div>
+            <div class="bus-badge">
+                <span class="bus-badge-type">uint8</span>
+                <span class="bus-badge-range">Range: [0, 255]</span>
+                <span class="bus-badge-dim">Dim: 480 × 320</span>
+            </div>
+        </div>
+        <div class="bus-arrow">▼</div>
+
+        <!-- Stage 1 -->
+        <div class="stage-card stage-enhancement">
+            <div class="stage-card-header">
+                <span class="stage-name">STAGE 1: SPATIAL CONTRAST ENHANCEMENT</span>
+                <span class="stage-tag tag-blue">Spatial Domain</span>
+            </div>
+            <div class="stage-desc">Gamma expansion ($\gamma = 0.80$) and percentile contrast stretching ($p_2, p_{98}$).</div>
+        </div>
+
+        <!-- Bus 2 -->
+        <div class="bus-connector">
+            <div class="bus-line"></div>
+            <div class="bus-badge">
+                <span class="bus-badge-type">uint8</span>
+                <span class="bus-badge-range">Range: [0, 255]</span>
+                <span class="bus-badge-dim">Dim: 480 × 320</span>
+            </div>
+        </div>
+        <div class="bus-arrow">▼</div>
+
+        <!-- Stage 2 -->
+        <div class="stage-card stage-restoration">
+            <div class="stage-card-header">
+                <span class="stage-name">STAGE 2: FREQUENCY-DOMAIN RESTORATION (2D BUTTERWORTH LOW-PASS)</span>
+                <span class="stage-tag tag-purple">Fourier Domain</span>
+            </div>
+            <div class="stage-desc">Suppresses granular aggregate stone texture while eliminating ideal-filter Gibbs ringing.</div>
+            <ul class="stage-methods">
+                <li><b>Forward 2D DFT & Centering:</b> $F(u, v) = \mathcal{F}\{f(x, y)\}$ [Data: complex128, Dim: 480 × 320].</li>
+                <li><b>Butterworth Transfer Function:</b> $H(u, v) = \frac{1}{1 + [D(u, v) / D_0]^{2n}}$ ($D_0 = 40.0$ px, order $n = 2$).</li>
+                <li><b>Inverse 2D DFT & Normalization:</b> $f_{\text{restored}}(x, y) = \text{clip}(\text{Re}\{\mathcal{F}^{-1}\{F \cdot H\}\}, 0, 255)$.</li>
+            </ul>
+        </div>
+
+        <!-- Bus 3 -->
+        <div class="bus-connector">
+            <div class="bus-line"></div>
+            <div class="bus-badge" style="border-color: #7c3aed; color: #6b21a8;">
+                <span class="bus-badge-type" style="background: #7c3aed;">uint8</span>
+                <span class="bus-badge-range">Range: [0, 255]</span>
+                <span class="bus-badge-dim">Dim: 480 × 320 (Texture Attenuated Smooth Surface)</span>
+            </div>
+        </div>
+        <div class="bus-arrow" style="color: #7c3aed;">▼</div>
+
+        <!-- Stage 3 -->
+        <div class="stage-card stage-segmentation">
+            <div class="stage-card-header">
+                <span class="stage-name">STAGE 3: LOCAL ADAPTIVE GAUSSIAN SEGMENTATION</span>
+                <span class="stage-tag tag-amber">Adaptive Local Binarization</span>
+            </div>
+            <div class="stage-desc">Dynamically computes local threshold per pixel to handle spatial illumination gradients.</div>
+            <ul class="stage-methods">
+                <li><b>Separable Gaussian Kernel:</b> Window size $17 \times 17$, standard deviation $\sigma = 2.5$.</li>
+                <li><b>Dynamic Local Cutoff:</b> $T(x, y) = \mu_{17\times 17}(x, y) - C$ (constant offset $C = 4.0$).</li>
+            </ul>
+        </div>
+
+        <!-- Bus 4 -->
+        <div class="bus-connector">
+            <div class="bus-line"></div>
+            <div class="bus-badge" style="border-color: #059669; color: #047857;">
+                <span class="bus-badge-type" style="background: #059669;">binary uint8</span>
+                <span class="bus-badge-range">Values: {0, 255}</span>
+                <span class="bus-badge-dim">Dim: 480 × 320</span>
+            </div>
+        </div>
+        <div class="bus-arrow" style="color: #059669;">▼</div>
+
+        <!-- Output -->
+        <div class="stage-card stage-output">
+            <div class="stage-card-header">
+                <span class="stage-name">OUTPUT: PIPELINE B BINARY CRACK MASK</span>
+                <span class="stage-tag tag-slate">Test IoU: 0.1709 | Latency: 65.6 ms</span>
+            </div>
+            <div class="stage-desc"><b>Engineering Finding:</b> Test IoU increases by 5.6× over Pipeline A (+14.06% absolute). Recovers faint hairline cracks, but isolated surface pores remain as false positive noise.</div>
+        </div>
+    </div>
+</div>
+
+<ul>
+<li><strong>Stage 1 (Spatial Enhancement):</strong> Identical $\gamma = 0.80$ gamma expansion and percentile contrast stretching as in Pipeline A.</li>
+<li><em>Inter-Stage Transfer 1:</em> <strong>Data Type: <code>uint8</code></strong>, <strong>Value Range: <code>[0, 255]</code></strong>, Dimensions: $480 \times 320$.</li>
+<li><strong>Stage 2 (Frequency-Domain Restoration):</strong> The enhanced image is transformed to the frequency domain via centered 2D DFT ($F(u, v) \in \mathbb{C}^{M\times N}$, <code>complex128</code>). A 2D Butterworth low-pass filter of order $n = 2$ and cutoff $D_0 = 40.0$ pixels attenuates high-frequency spatial variation without the severe ringing artifacts caused by ideal filters:
+  $$H(u, v) = \frac{1}{1 + [D(u, v) / D_0]^{2n}}$$
+  The inverse DFT yields a smooth restored surface where granular aggregate stone texture is eliminated.</li>
+<li><em>Inter-Stage Transfer 2:</em> <strong>Data Type: <code>uint8</code></strong>, <strong>Value Range: <code>[0, 255]</code></strong>, Dimensions: $480 \times 320$.</li>
+<li><strong>Stage 3 (Local Adaptive Segmentation):</strong> Local Gaussian windowing computes adaptive thresholds $T(x, y) = \mu_{17\times 17}(x, y) - 4.0$, dynamically compensating for spatial shading variations.</li>
+<li><em>Output:</em> Binary mask, <strong>Data Type: <code>binary uint8</code></strong>, <strong>Value Range: <code>{0, 255}</code></strong>, Dimensions: $480 \times 320$.</li>
+<li><em>Engineering Finding:</em> Mean test IoU surges to $0.1709$ (a 5.6× improvement over Pipeline A), though small isolated pore noise remains.</li>
+</ul>
+<hr />
+<h4>3.3.3 Pipeline C: Full 5-Stage Advanced Production Inspection System</h4>
+<p>Pipeline C is the final comprehensive production architecture. It enhances Pipeline B by adding multi-scale morphological post-processing and a civil engineering structural health assessment engine.</p>
+
+<div class="architecture-container" style="border: 2px solid #1e3a8a; box-shadow: 0 10px 15px -3px rgba(30, 58, 138, 0.08);">
+    <div class="arch-header" style="background: #1e3a8a; color: white; padding: 10px 16px; border-radius: 8px 8px 0 0; margin: -20px -20px 16px -20px;">
+        <span class="arch-title" style="color: white; font-size: 13pt;">PIPELINE C: PRODUCTION 5-STAGE ADVANCED CIVIL INSPECTION ARCHITECTURE</span>
+        <span class="arch-badge" style="background: #fbbf24; color: #0f172a;">Final Production Pipeline</span>
+    </div>
+    <div class="pipeline-flow">
+        <!-- Input -->
+        <div class="stage-card stage-input">
+            <div class="stage-card-header">
+                <span class="stage-name">INPUT: RAW CONCRETE INSPECTION IMAGE</span>
+                <span class="stage-tag tag-slate">Input Tensor</span>
+            </div>
+            <div class="stage-desc">Standardized grayscale field acquisition: <b>Data Type: uint8</b>, <b>Range: [0, 255]</b>, <b>Dim: 480 × 320</b>.</div>
+        </div>
+
+        <!-- Bus 1 -->
+        <div class="bus-connector">
+            <div class="bus-line"></div>
+            <div class="bus-badge">
+                <span class="bus-badge-type">uint8</span>
+                <span class="bus-badge-range">Range: [0, 255]</span>
+                <span class="bus-badge-dim">Dim: 480 × 320</span>
+            </div>
+        </div>
+        <div class="bus-arrow">▼</div>
+
+        <!-- Stage 1 -->
+        <div class="stage-card stage-enhancement">
+            <div class="stage-card-header">
+                <span class="stage-name">STAGE 1: SPATIAL CONTRAST ENHANCEMENT</span>
+                <span class="stage-tag tag-blue">Spatial Domain</span>
+            </div>
+            <div class="stage-desc">Compensates natural outdoor illumination gradients and expands compressed crack contrast.</div>
+            <ul class="stage-methods">
+                <li><b>Power-Law Transformation:</b> $s = c \cdot r^\gamma$ (tuned parameter $\gamma = 0.80$).</li>
+                <li><b>Percentile Contrast Stretching:</b> Normalization across $[p_2, p_{98}]$ to full 8-bit dynamic range $[0, 255]$.</li>
+            </ul>
+        </div>
+
+        <!-- Bus 2 -->
+        <div class="bus-connector">
+            <div class="bus-line"></div>
+            <div class="bus-badge">
+                <span class="bus-badge-type">uint8</span>
+                <span class="bus-badge-range">Range: [0, 255]</span>
+                <span class="bus-badge-dim">Dim: 480 × 320 (Shadows Expanded)</span>
+            </div>
+        </div>
+        <div class="bus-arrow">▼</div>
+
+        <!-- Stage 2 -->
+        <div class="stage-card stage-restoration">
+            <div class="stage-card-header">
+                <span class="stage-name">STAGE 2: FREQUENCY-DOMAIN TEXTURE SUPPRESSION (BUTTERWORTH LPF)</span>
+                <span class="stage-tag tag-purple">Fourier Domain</span>
+            </div>
+            <div class="stage-desc">Suppresses high-frequency aggregate stone texture without ringing artifacts.</div>
+            <ul class="stage-methods">
+                <li><b>2D Centered Fast Fourier Transform:</b> $F(u, v) = \mathcal{F}\{f(x, y)\}$ [Data: complex128, Dim: 480 × 320].</li>
+                <li><b>2D Butterworth Filter:</b> $H(u, v) = 1 / (1 + [D(u, v)/D_0]^{2n})$ with cutoff $D_0 = 40.0$ px, order $n = 2$.</li>
+                <li><b>2D Inverse Fast Fourier Transform:</b> $f_{\text{restored}} = \text{clip}(\text{Re}\{\mathcal{F}^{-1}\{F \cdot H\}\}, 0, 255)$.</li>
+            </ul>
+        </div>
+
+        <!-- Bus 3 -->
+        <div class="bus-connector">
+            <div class="bus-line"></div>
+            <div class="bus-badge" style="border-color: #7c3aed; color: #6b21a8;">
+                <span class="bus-badge-type" style="background: #7c3aed;">uint8</span>
+                <span class="bus-badge-range">Range: [0, 255]</span>
+                <span class="bus-badge-dim">Dim: 480 × 320 (Aggregate Grain Eliminated)</span>
+            </div>
+        </div>
+        <div class="bus-arrow" style="color: #7c3aed;">▼</div>
+
+        <!-- Stage 3 -->
+        <div class="stage-card stage-segmentation">
+            <div class="stage-card-header">
+                <span class="stage-name">STAGE 3: LOCAL ADAPTIVE GAUSSIAN SEGMENTATION</span>
+                <span class="stage-tag tag-amber">Adaptive Local Binarization</span>
+            </div>
+            <div class="stage-desc">Segment cracks under spatially non-uniform illumination.</div>
+            <ul class="stage-methods">
+                <li><b>Fast Separable 1D Gaussian Smoothing:</b> Window $17 \times 17$, $\sigma = 2.5$.</li>
+                <li><b>Dynamic Local Threshold:</b> $T(x, y) = \mu_{17\times 17}(x, y) - 4.0$. Binarizes pixels where $I < T(x, y)$.</li>
+            </ul>
+        </div>
+
+        <!-- Bus 4 -->
+        <div class="bus-connector">
+            <div class="bus-line"></div>
+            <div class="bus-badge" style="border-color: #d97706; color: #b45309;">
+                <span class="bus-badge-type" style="background: #d97706;">binary uint8</span>
+                <span class="bus-badge-range">Values: {0, 255}</span>
+                <span class="bus-badge-dim">Dim: 480 × 320 (Raw Candidates + Pores)</span>
+            </div>
+        </div>
+        <div class="bus-arrow" style="color: #d97706;">▼</div>
+
+        <!-- Stage 4 -->
+        <div class="stage-card stage-morphology">
+            <div class="stage-card-header">
+                <span class="stage-name">STAGE 4: MULTI-SCALE MORPHOLOGICAL POST-PROCESSING</span>
+                <span class="stage-tag tag-emerald">Morphological Domain</span>
+            </div>
+            <div class="stage-desc">Bridges hairline discontinuities, prunes isolated pore noise, and fills annular cavities.</div>
+            <ul class="stage-methods">
+                <li><b>Directional Closing ($3 \times 3$ Elliptical SE):</b> $A \bullet B = (A \oplus B) \ominus B$ bridges micro-fissure breaks.</li>
+                <li><b>Area Opening (Small-Object Removal):</b> Eliminates disconnected components $< 20$ pixels (filters gravel pores).</li>
+                <li><b>Morphological Reconstruction Hole Filling:</b> Fills enclosed interior voids within crack boundaries.</li>
+            </ul>
+        </div>
+
+        <!-- Bus 5 -->
+        <div class="bus-connector">
+            <div class="bus-line"></div>
+            <div class="bus-badge" style="border-color: #059669; color: #047857;">
+                <span class="bus-badge-type" style="background: #059669;">binary uint8</span>
+                <span class="bus-badge-range">Values: {0, 255}</span>
+                <span class="bus-badge-dim">Dim: 480 × 320 (Continuous Crack Topology)</span>
+            </div>
+        </div>
+        <div class="bus-arrow" style="color: #059669;">▼</div>
+
+        <!-- Stage 5 -->
+        <div class="stage-card stage-measurement">
+            <div class="stage-card-header">
+                <span class="stage-name">STAGE 5: CONNECTED COMPONENT ANALYSIS & CIVIL DECISION RULE</span>
+                <span class="stage-tag tag-rose">Decision Engine</span>
+            </div>
+            <div class="stage-desc">Computes quantitative geometric metrics and renders actionable structural safety verdict.</div>
+            <ul class="stage-methods">
+                <li><b>8-Connected Object Labelling:</b> Computes component areas $A_i$, centroids $(\bar{x}_i, \bar{y}_i)$, bounding boxes, count $K$.</li>
+                <li><b>Crack Surface Area Density:</b> $\rho_{\text{crack}} = (\sum_{i=1}^K A_i / [M \cdot N]) \times 100\%$.</li>
+                <li><b>Lossless Run-Length Encoding (RLE):</b> Compresses sparse binary mask ($4.16\times$ compression ratio, 76.0% storage savings).</li>
+                <li><b>Civil Structural Safety Rule:</b>
+                    <br/>• <b>PASS</b>: $\rho_{\text{crack}} < 0.20\%$ (Sound Concrete Slab)
+                    <br/>• <b>MONITOR</b>: $0.20\% \le \rho_{\text{crack}} \le 1.20\%$ (Superficial Shrinkage Fissures)
+                    <br/>• <b>FAIL</b>: $\rho_{\text{crack}} > 1.20\%$ (Critical Structural Fracture / Urgent Intervention)
+                </li>
+            </ul>
+        </div>
+
+        <!-- Bus 6 -->
+        <div class="bus-connector">
+            <div class="bus-line"></div>
+            <div class="bus-badge" style="border-color: #0f172a; color: #0f172a;">
+                <span class="bus-badge-type" style="background: #0f172a;">Multi-Output</span>
+                <span class="bus-badge-range">Diagnostic Telemetry Bundle</span>
+                <span class="bus-badge-dim">Full Structural Audit</span>
+            </div>
+        </div>
+        <div class="bus-arrow" style="color: #0f172a;">▼</div>
+
+        <!-- Outputs -->
+        <div class="grid-2col" style="margin-top: 0;">
+            <div class="stage-card stage-output" style="border-left-color: #059669;">
+                <div class="stage-card-header">
+                    <span class="stage-name">OUTPUT 1: FINAL BINARY MASK</span>
+                    <span class="stage-tag tag-emerald">binary uint8</span>
+                </div>
+                <div class="stage-desc"><b>Values:</b> {0, 255} | <b>Dim:</b> 480 × 320<br/>Ground-truth evaluation mask.</div>
+            </div>
+            <div class="stage-card stage-output" style="border-left-color: #e11d48;">
+                <div class="stage-card-header">
+                    <span class="stage-name">OUTPUT 2: DIAGNOSTIC OVERLAY</span>
+                    <span class="stage-tag tag-rose">RGB uint8</span>
+                </div>
+                <div class="stage-desc"><b>Range:</b> [0, 255] | <b>Dim:</b> 480 × 320 × 3<br/>Scarlet red overlay on grayscale concrete.</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<hr />
+<h4>3.3.4 Comprehensive Inter-Stage Dataflow Specification Table</h4>
+<p>As mandated by Page 5 of the course specification, the exact tensor specifications, data types, and value ranges between every pair of stages across all pipelines are formally cataloged in Table I.</p>
+<p><strong>TABLE I: INTER-STAGE DATA SPECIFICATION AND TENSOR TRANSFER CHARACTERISTICS</strong></p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Pipeline</th>
+<th style="text-align: left;">Stage Transition</th>
+<th style="text-align: left;">Representation / Signal</th>
+<th style="text-align: center;">Data Type (<code>dtype</code>)</th>
+<th style="text-align: center;">Value Range / Domain</th>
+<th style="text-align: center;">Tensor Shape</th>
+<th style="text-align: left;">Defect Corrected &amp; Engineering Justification</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>Baselines</strong></td>
+<td style="text-align: left;">Input → Stage 1</td>
+<td style="text-align: left;">Raw Grayscale Concrete</td>
+<td style="text-align: center;"><code>uint8</code></td>
+<td style="text-align: center;">$[0, 255]$</td>
+<td style="text-align: center;">$(480, 320)$</td>
+<td style="text-align: left;">Standardized uncalibrated sensor acquisition.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Baselines</strong></td>
+<td style="text-align: left;">Stage 1 → Output</td>
+<td style="text-align: left;">Binarized Threshold Mask</td>
+<td style="text-align: center;"><code>binary uint8</code></td>
+<td style="text-align: center;">${0, 255}$</td>
+<td style="text-align: center;">$(480, 320)$</td>
+<td style="text-align: left;">Trivial cutoff ($T=127$) or Otsu binarization.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Pipeline A</strong></td>
+<td style="text-align: left;">Input → Stage 1</td>
+<td style="text-align: left;">Raw Grayscale Surface</td>
+<td style="text-align: center;"><code>uint8</code></td>
+<td style="text-align: center;">$[0, 255]$</td>
+<td style="text-align: center;">$(480, 320)$</td>
+<td style="text-align: left;">Raw input with compressed dynamic range.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Pipeline A</strong></td>
+<td style="text-align: left;">Stage 1 → Stage 2</td>
+<td style="text-align: left;">Contrast-Enhanced Image</td>
+<td style="text-align: center;"><code>uint8</code></td>
+<td style="text-align: center;">$[0, 255]$</td>
+<td style="text-align: center;">$(480, 320)$</td>
+<td style="text-align: left;">Non-linear $\gamma=0.80$ gamma and $[p_2, p_{98}]$ stretch.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Pipeline A</strong></td>
+<td style="text-align: left;">Stage 2 → Output</td>
+<td style="text-align: left;">Global Otsu Crack Mask</td>
+<td style="text-align: center;"><code>binary uint8</code></td>
+<td style="text-align: center;">${0, 255}$</td>
+<td style="text-align: center;">$(480, 320)$</td>
+<td style="text-align: left;">Foreground $255$ represents detected cracks.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Pipeline B</strong></td>
+<td style="text-align: left;">Input → Stage 1</td>
+<td style="text-align: left;">Raw Grayscale Surface</td>
+<td style="text-align: center;"><code>uint8</code></td>
+<td style="text-align: center;">$[0, 255]$</td>
+<td style="text-align: center;">$(480, 320)$</td>
+<td style="text-align: left;">Standardized grayscale input.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Pipeline B</strong></td>
+<td style="text-align: left;">Stage 1 → Stage 2</td>
+<td style="text-align: left;">Contrast-Enhanced Image</td>
+<td style="text-align: center;"><code>uint8</code></td>
+<td style="text-align: center;">$[0, 255]$</td>
+<td style="text-align: center;">$(480, 320)$</td>
+<td style="text-align: left;">Enhanced dark crack visibility.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Pipeline B</strong></td>
+<td style="text-align: left;">Stage 2 (Internal)</td>
+<td style="text-align: left;">Centered Fourier Spectrum</td>
+<td style="text-align: center;"><code>complex128</code></td>
+<td style="text-align: center;">$(-\infty, +\infty) + j(-\infty, +\infty)$</td>
+<td style="text-align: center;">$(480, 320)$</td>
+<td style="text-align: left;">2D centered DFT for frequency filtering.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Pipeline B</strong></td>
+<td style="text-align: left;">Stage 2 → Stage 3</td>
+<td style="text-align: left;">Frequency Restored Surface</td>
+<td style="text-align: center;"><code>uint8</code></td>
+<td style="text-align: center;">$[0, 255]$</td>
+<td style="text-align: center;">$(480, 320)$</td>
+<td style="text-align: left;">High-frequency stone aggregate texture removed.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Pipeline B</strong></td>
+<td style="text-align: left;">Stage 3 → Output</td>
+<td style="text-align: left;">Local Adaptive Binary Mask</td>
+<td style="text-align: center;"><code>binary uint8</code></td>
+<td style="text-align: center;">${0, 255}$</td>
+<td style="text-align: center;">$(480, 320)$</td>
+<td style="text-align: left;">Adaptive thresholding handles lighting gradients.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Pipeline C</strong></td>
+<td style="text-align: left;">Input → Stage 1</td>
+<td style="text-align: left;">Raw Concrete Field Image</td>
+<td style="text-align: center;"><code>uint8</code></td>
+<td style="text-align: center;">$[0, 255]$</td>
+<td style="text-align: center;">$(480, 320)$</td>
+<td style="text-align: left;">Raw input with sensor noise and non-uniform lighting.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Pipeline C</strong></td>
+<td style="text-align: left;">Stage 1 → Stage 2</td>
+<td style="text-align: left;">Enhanced Dynamic Range Image</td>
+<td style="text-align: center;"><code>uint8</code></td>
+<td style="text-align: center;">$[0, 255]$</td>
+<td style="text-align: center;">$(480, 320)$</td>
+<td style="text-align: left;">Corrects uneven natural illumination and shadows.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Pipeline C</strong></td>
+<td style="text-align: left;">Stage 2 → Stage 3</td>
+<td style="text-align: left;">Restored Smooth Surface</td>
+<td style="text-align: center;"><code>uint8</code></td>
+<td style="text-align: center;">$[0, 255]$</td>
+<td style="text-align: center;">$(480, 320)$</td>
+<td style="text-align: left;">2D Butterworth lowpass removes gravel/aggregate noise.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Pipeline C</strong></td>
+<td style="text-align: left;">Stage 3 → Stage 4</td>
+<td style="text-align: left;">Raw Binary Crack Mask</td>
+<td style="text-align: center;"><code>binary uint8</code></td>
+<td style="text-align: center;">${0, 255}$</td>
+<td style="text-align: center;">$(480, 320)$</td>
+<td style="text-align: left;">Local adaptive segmentation extracts crack candidates.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Pipeline C</strong></td>
+<td style="text-align: left;">Stage 4 → Stage 5</td>
+<td style="text-align: left;">Morphologically Refined Mask</td>
+<td style="text-align: center;"><code>binary uint8</code></td>
+<td style="text-align: center;">${0, 255}$</td>
+<td style="text-align: center;">$(480, 320)$</td>
+<td style="text-align: left;">Bridges crack breaks, prunes pores, fills cavities.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Pipeline C</strong></td>
+<td style="text-align: left;">Stage 5 → Final Mask</td>
+<td style="text-align: left;">Production Binary Mask</td>
+<td style="text-align: center;"><code>binary uint8</code></td>
+<td style="text-align: center;">${0, 255}$</td>
+<td style="text-align: center;">$(480, 320)$</td>
+<td style="text-align: left;">Pixel-perfect binary ground-truth comparison mask.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Pipeline C</strong></td>
+<td style="text-align: left;">Stage 5 → Visual Overlay</td>
+<td style="text-align: left;">Inspection Overlay RGB Image</td>
+<td style="text-align: center;"><code>uint8</code></td>
+<td style="text-align: center;">$[0, 255]$</td>
+<td style="text-align: center;">$(480, 320, 3)$</td>
+<td style="text-align: left;">Scarlet red crack overlay on original grayscale slab.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Pipeline C</strong></td>
+<td style="text-align: left;">Stage 5 → Telemetry</td>
+<td style="text-align: left;">Structural Decision &amp; Metrics</td>
+<td style="text-align: center;"><code>dict / JSON</code></td>
+<td style="text-align: center;">PASS / MONITOR / FAIL</td>
+<td style="text-align: center;">Scalar record</td>
+<td style="text-align: left;">Quantitative engineering assessment report.</td>
+</tr>
+</tbody>
+</table>
 <h2>4. Pure NumPy Implementations and Hand-Worked Examples</h2>
 <p>As specified by course requirements, core operations were developed in pure NumPy from scratch without relying on high-level library functions, and verified against OpenCV and SciPy:</p>
 <h3>4.1 2D Spatial Convolution</h3>

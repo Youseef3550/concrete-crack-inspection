@@ -62,55 +62,178 @@ The 118 paired images were split into a Development Set of 82 images (70%) and a
 
 A unified loading pipeline converts all input images to standardized grayscale floating-point arrays normalized to $[0, 255]$. Controlled noise degradation functions for additive Gaussian ($\sigma \in \{10, 25, 50\}$), Salt-and-Pepper ($p \in \{0.01, 0.03, 0.05\}$), Speckle, and Poisson noise were implemented to evaluate filter robustness.
 
-### 3.2 Baseline Pipelines
-Two mandatory baselines establish the performance floor:
-1. **Trivial Baseline:** A fixed global intensity threshold at $T = 127$ on raw grayscale images.
-2. **Simple Baseline:** Global Otsu thresholding followed by a single $3 \times 3$ rectangular morphological opening.
+### 3.2 Baseline Architectures
+Two standard benchmark baselines establish the performance floor and justify the necessity of multi-stage engineering:
+1. **Trivial Baseline (Fixed Global Threshold):**
+   - Applies a constant intensity cutoff at $T = 127$ on the raw grayscale image.
+   - Binarization: $B(x, y) = 255$ if $I(x, y) < 127$ else $0$.
+2. **Simple Baseline (Global Otsu + 3x3 Opening):**
+   - Applies Otsu's global variance-maximization threshold $T^*$ followed by a $3 \times 3$ square morphological opening ($B_{\text{open}} = (A \ominus K_{3\times 3}) \oplus K_{3\times 3}$).
+
+```mermaid
+flowchart LR
+    subgraph TrivialBaseline [Trivial Baseline Architecture]
+        TB_In["Raw Grayscale Input<br/><b>uint8 [0, 255]</b><br/>(480 × 320)"] -->|uint8 [0, 255]| TB_S1["Fixed Threshold<br/>T = 127"]
+        TB_S1 -->|binary uint8 {0, 255}| TB_Out["Binary Crack Mask<br/><b>binary uint8 {0, 255}</b><br/>(480 × 320)"]
+    end
+
+    subgraph SimpleBaseline [Simple Baseline Architecture]
+        SB_In["Raw Grayscale Input<br/><b>uint8 [0, 255]</b><br/>(480 × 320)"] -->|uint8 [0, 255]| SB_S1["Global Otsu Threshold<br/>arg max σ_B²(t)"]
+        SB_S1 -->|binary uint8 {0, 255}| SB_S2["Morphological Opening<br/>3×3 Square Kernel"]
+        SB_S2 -->|binary uint8 {0, 255}| SB_Out["Filtered Binary Mask<br/><b>binary uint8 {0, 255}</b><br/>(480 × 320)"]
+    end
+```
+
+---
 
 ### 3.3 Proposed Pipelines of Increasing Sophistication
 
-```
-Raw Grayscale Input [uint8, 0-255]
-             │
-             ▼
-[Stage 1: Spatial Enhancement]
-   - Power-Law Gamma (γ = 0.85)
-   - Percentile Contrast Stretch [p2, p98]
-             │
-             ▼ Enhanced Image [uint8, 0-255]
-[Stage 2: Frequency-Domain Restoration]
-   - 2D DFT & Centered Spectrum
-   - Butterworth Low-Pass Filter (D0 = 45, n = 2)
-   - Inverse DFT
-             │
-             ▼ Restored Smooth Surface [uint8, 0-255]
-[Stage 3: Local Adaptive Segmentation]
-   - Local Gaussian Adaptive Threshold (Block = 17, C = 4.5)
-   - Sobel Gradient Magnitude Edge Confirmation (> 15)
-             │
-             ▼ Raw Binary Mask [uint8, {0, 255}]
-[Stage 4: Morphological Refinement]
-   - Directional Closing (5x5 Elliptical SE) -> Bridge Gaps
-   - Small Object Removal (Area Opening < 40 px) -> Pore Filtering
-   - Morphological Reconstruction Hole Filling
-             │
-             ▼ Refined Crack Mask [uint8, {0, 255}]
-[Stage 5: Measurement & Structural Decision Rule]
-   - Connected Component Analysis (Area, Length, Count)
-   - Cracked Area Percentage Calculation
-   - Decision: PASS (<0.20%) | MONITOR (0.20-1.20%) | FAIL (>1.20%)
+To systematically conquer challenging real-world concrete inspection conditions (aggregate texture, illumination shadows, and hairline discontinuities), three complete pipelines of increasing sophistication were designed, implemented, and benchmarked. In strict compliance with course specifications (Page 5), explicit block diagrams with exact inter-stage data types and value ranges are detailed below.
+
+#### 3.3.1 Pipeline A: Spatial Contrast Enhancement + Global Otsu
+Pipeline A couples spatial non-linear gamma expansion and percentile contrast stretching with automatic Otsu thresholding.
+
+```mermaid
+flowchart LR
+    A_In["Raw Grayscale Input<br/><b>uint8 [0, 255]</b><br/>(480 × 320)"] -->|"Inter-Stage Bus 1<br/><b>Data: uint8</b><br/>Range: [0, 255]<br/>Dim: 480 × 320"| A_S1
+    
+    subgraph A_S1 [Stage 1: Spatial Enhancement]
+        A_Op1["1. Power-Law Gamma (γ = 0.80)<br/>s = c · r^γ"]
+        A_Op2["2. Percentile Stretch [p2, p98]<br/>Clip to [0, 255]"]
+    end
+    
+    A_S1 -->|"Inter-Stage Bus 2<br/><b>Data: uint8</b><br/>Range: [0, 255]<br/>Dim: 480 × 320<br/>(Enhanced Contrast)"| A_S2
+    
+    subgraph A_S2 [Stage 2: Global Segmentation]
+        A_Op3["Otsu Automatic Threshold<br/>Maximize between-class variance σ_B²(t)<br/>Polarity Invert: Cracks -> 255"]
+    end
+    
+    A_S2 -->|"Output Bus<br/><b>Data: binary uint8</b><br/>Values: {0, 255}<br/>Dim: 480 × 320"| A_Out["Pipeline A Binary Mask<br/><b>binary uint8 {0, 255}</b><br/>(480 × 320)"]
 ```
 
-- **Pipeline A (Spatial Enhancement + Otsu):** Employs power-law gamma transformation ($\gamma = 0.80$) to expand dark crack intensities, followed by contrast stretching and global Otsu thresholding.
-- **Pipeline B (Frequency Restoration + Adaptive Segmentation):** Introduces a 2D Butterworth low-pass filter ($D_0 = 40.0, n = 2$) in the frequency domain to suppress granular aggregate texture, followed by local adaptive Gaussian thresholding ($17 \times 17$ block, $C = 4.0$).
-- **Pipeline C (Final Advanced Production Pipeline):** The complete five-stage architecture integrating:
-  1. Spatial enhancement ($\gamma = 0.85$, contrast stretch between 2nd and 98th percentiles);
-  2. 2D Butterworth frequency low-pass filtering ($D_0 = 45.0, n = 2$);
-  3. Local adaptive Gaussian thresholding confirmed by Sobel gradient magnitude ($|\nabla I| > 15$);
-  4. Morphological directional closing ($5 \times 5$ ellipse) to reconnect hairline breaks, small-object area opening to eliminate isolated dark pores ($<40$ px), and morphological reconstruction for hole filling;
-  5. Structural assessment engine calculating crack metrics and the safety verdict.
+- **Stage 1 (Spatial Enhancement):** Power-law gamma transformation ($\gamma = 0.80$) non-linearly stretches dark shadow regions, pulling narrow crack depressions out of the noise floor. Percentile stretching across $[p_2, p_{98}]$ eliminates outlier pixel saturation and scales dynamic range to full $[0, 255]$.
+  - *Inter-Stage Transfer:* Grayscale image, **Data Type: `uint8`**, **Value Range: `[0, 255]`**, Dimensions: $480 \times 320$.
+- **Stage 2 (Global Segmentation):** Otsu’s algorithm exhaustively searches the 1D histogram to compute threshold $T^* = \arg\max_t \sigma_B^2(t)$. Pixels below $T^*$ are assigned foreground value $255$.
+  - *Output:* Binary mask, **Data Type: `binary uint8`**, **Value Range: `{0, 255}`**, Dimensions: $480 \times 320$.
+- *Engineering Finding:* While computationally light (12.8 ms), Pipeline A achieves only $\text{IoU} = 0.0303$ due to global threshold failure under natural outdoor illumination gradients.
 
 ---
+
+#### 3.3.2 Pipeline B: Frequency-Domain Restoration + Local Adaptive Segmentation
+Pipeline B introduces 2D Fourier-domain Butterworth low-pass filtering to attenuate high-frequency concrete aggregate speckle, followed by local Gaussian adaptive thresholding.
+
+```mermaid
+flowchart LR
+    B_In["Raw Grayscale Input<br/><b>uint8 [0, 255]</b><br/>(480 × 320)"] -->|"uint8 [0, 255]"| B_S1
+    
+    subgraph B_S1 [Stage 1: Spatial Contrast Enhancement]
+        B_Op1["Gamma Transform (γ = 0.80)<br/>Percentile Stretch [p2, p98]"]
+    end
+    
+    B_S1 -->|"Inter-Stage Bus 1<br/><b>Data: uint8</b><br/>Range: [0, 255]<br/>Dim: 480 × 320"| B_S2
+    
+    subgraph B_S2 [Stage 2: Frequency Restoration]
+        B_Op2["1. 2D FFT & Centering (complex128)<br/>2. Butterworth Lowpass (D0 = 40, n = 2)<br/>3. Inverse 2D FFT & Magnitude (uint8)"]
+    end
+    
+    B_S2 -->|"Inter-Stage Bus 2<br/><b>Data: uint8</b><br/>Range: [0, 255]<br/>Dim: 480 × 320<br/>(Texture Suppressed)"| B_S3
+    
+    subgraph B_S3 [Stage 3: Local Adaptive Segmentation]
+        B_Op3["Local Gaussian Adaptive Threshold<br/>Block Size = 17 × 17, Constant C = 4.0<br/>Dynamic Local Mean Compensation"]
+    end
+    
+    B_S3 -->|"Output Bus<br/><b>Data: binary uint8</b><br/>Values: {0, 255}<br/>Dim: 480 × 320"| B_Out["Pipeline B Binary Mask<br/><b>binary uint8 {0, 255}</b><br/>(480 × 320)"]
+```
+
+- **Stage 1 (Spatial Enhancement):** Identical $\gamma = 0.80$ gamma expansion and percentile contrast stretching as in Pipeline A.
+  - *Inter-Stage Transfer 1:* **Data Type: `uint8`**, **Value Range: `[0, 255]`**, Dimensions: $480 \times 320$.
+- **Stage 2 (Frequency-Domain Restoration):** The enhanced image is transformed to the frequency domain via centered 2D DFT ($F(u, v) \in \mathbb{C}^{M\times N}$, `complex128`). A 2D Butterworth low-pass filter of order $n = 2$ and cutoff $D_0 = 40.0$ pixels attenuates high-frequency spatial variation without the severe ringing artifacts caused by ideal filters:
+  $$H(u, v) = \frac{1}{1 + [D(u, v) / D_0]^{2n}}$$
+  The inverse DFT yields a smooth restored surface where granular aggregate stone texture is eliminated.
+  - *Inter-Stage Transfer 2:* **Data Type: `uint8`**, **Value Range: `[0, 255]`**, Dimensions: $480 \times 320$.
+- **Stage 3 (Local Adaptive Segmentation):** Local Gaussian windowing computes adaptive thresholds $T(x, y) = \mu_{17\times 17}(x, y) - 4.0$, dynamically compensating for spatial shading variations.
+  - *Output:* Binary mask, **Data Type: `binary uint8`**, **Value Range: `{0, 255}`**, Dimensions: $480 \times 320$.
+- *Engineering Finding:* Mean test IoU surges to $0.1709$ (a 5.6× improvement over Pipeline A), though small isolated pore noise remains.
+
+---
+
+#### 3.3.3 Pipeline C: Full 5-Stage Advanced Production Inspection System
+Pipeline C is the final comprehensive production architecture. It enhances Pipeline B by adding multi-scale morphological post-processing and a civil engineering structural health assessment engine.
+
+```mermaid
+flowchart TD
+    C_In["Raw Grayscale Input Image<br/><b>Data: uint8</b> | Range: [0, 255] | Dim: 480 × 320"] -->|"Bus 1: uint8 [0, 255]"| C_S1
+    
+    subgraph C_S1 [Stage 1: Spatial Contrast Enhancement]
+        C1_A["Power-Law Transformation (γ = 0.80)"]
+        C1_B["2% - 98% Robust Percentile Contrast Stretch"]
+    end
+    
+    C_S1 -->|"Bus 2: uint8 [0, 255]<br/>Enhanced Dynamic Range & Shadow Expansion"| C_S2
+    
+    subgraph C_S2 [Stage 2: Frequency-Domain Restoration]
+        C2_A["2D Centered Fast Fourier Transform (FFT)"]
+        C2_B["Butterworth Low-Pass Filter (D0 = 40.0, n = 2)"]
+        C2_C["Inverse 2D FFT & Real Component Clipping"]
+    end
+    
+    C_S2 -->|"Bus 3: uint8 [0, 255]<br/>Restored Surface (Aggregate Grain Attenuated)"| C_S3
+    
+    subgraph C_S3 [Stage 3: Local Adaptive Segmentation]
+        C3_A["Fast Separable Gaussian Adaptive Thresholding"]
+        C3_B["Neighborhood = 17 × 17, Constant Offset C = 4.0"]
+    end
+    
+    C_S3 -->|"Bus 4: binary uint8 {0, 255}<br/>Raw Binary Candidates (Cracks + Surface Pores)"| C_S4
+    
+    subgraph C_S4 [Stage 4: Morphological Refinement]
+        C4_A["Directional Closing (3×3 Elliptical SE) -> Bridge Fissure Gaps"]
+        C4_B["Area Opening (Small-Object Removal < 20 px) -> Filter Pores"]
+        C4_C["Morphological Reconstruction Hole Filling -> Seal Voids"]
+    end
+    
+    C_S4 -->|"Bus 5: binary uint8 {0, 255}<br/>Continuous Topological Crack Mask"| C_S5
+    
+    subgraph C_S5 [Stage 5: Object Measurement & Decision Engine]
+        C5_A["8-Connected Component Analysis (Area, Length, Bounding Boxes)"]
+        C5_B["Crack Area Density: ρ_crack = (Σ A_i / M·N) × 100%"]
+        C5_C["Lossless Run-Length Encoding (RLE) Compression (4.16× Ratio)"]
+        C5_D["Civil Safety Decision Rule:<br/>• PASS: ρ < 0.20% (Sound Concrete)<br/>• MONITOR: 0.20% ≤ ρ ≤ 1.20% (Superficial Fissures)<br/>• FAIL: ρ > 1.20% (Hazardous Structural Defect)"]
+    end
+    
+    C_S5 --> C_Out1["Output 1: Final Binary Mask<br/><b>binary uint8 {0, 255}</b><br/>(480 × 320)"]
+    C_S5 --> C_Out2["Output 2: Diagnostic RGB Overlay<br/><b>RGB uint8 [0, 255]</b><br/>(480 × 320 × 3)"]
+    C_S5 --> C_Out3["Output 3: Structural Telemetry<br/><b>JSON / Dict</b><br/>Decision: PASS/MONITOR/FAIL<br/>Area %: float | Count: int"]
+```
+
+---
+
+#### 3.3.4 Comprehensive Inter-Stage Dataflow Specification Table
+
+As mandated by Page 5 of the course specification, the exact tensor specifications, data types, and value ranges between every pair of stages across all pipelines are formally cataloged in Table I.
+
+**TABLE I: INTER-STAGE DATA SPECIFICATION AND TENSOR TRANSFER CHARACTERISTICS**
+
+| Pipeline | Stage Transition | Representation / Signal | Data Type (`dtype`) | Value Range / Domain | Tensor Shape | Defect Corrected & Engineering Justification |
+| :--- | :--- | :--- | :---: | :---: | :---: | :--- |
+| **Baselines** | Input → Stage 1 | Raw Grayscale Concrete | `uint8` | $[0, 255]$ | $(480, 320)$ | Standardized uncalibrated sensor acquisition. |
+| **Baselines** | Stage 1 → Output | Binarized Threshold Mask | `binary uint8` | $\{0, 255\}$ | $(480, 320)$ | Trivial cutoff ($T=127$) or Otsu binarization. |
+| **Pipeline A** | Input → Stage 1 | Raw Grayscale Surface | `uint8` | $[0, 255]$ | $(480, 320)$ | Raw input with compressed dynamic range. |
+| **Pipeline A** | Stage 1 → Stage 2 | Contrast-Enhanced Image | `uint8` | $[0, 255]$ | $(480, 320)$ | Non-linear $\gamma=0.80$ gamma and $[p_2, p_{98}]$ stretch. |
+| **Pipeline A** | Stage 2 → Output | Global Otsu Crack Mask | `binary uint8` | $\{0, 255\}$ | $(480, 320)$ | Foreground $255$ represents detected cracks. |
+| **Pipeline B** | Input → Stage 1 | Raw Grayscale Surface | `uint8` | $[0, 255]$ | $(480, 320)$ | Standardized grayscale input. |
+| **Pipeline B** | Stage 1 → Stage 2 | Contrast-Enhanced Image | `uint8` | $[0, 255]$ | $(480, 320)$ | Enhanced dark crack visibility. |
+| **Pipeline B** | Stage 2 (Internal) | Centered Fourier Spectrum | `complex128` | $(-\infty, +\infty) + j(-\infty, +\infty)$ | $(480, 320)$ | 2D centered DFT for frequency filtering. |
+| **Pipeline B** | Stage 2 → Stage 3 | Frequency Restored Surface | `uint8` | $[0, 255]$ | $(480, 320)$ | High-frequency stone aggregate texture removed. |
+| **Pipeline B** | Stage 3 → Output | Local Adaptive Binary Mask | `binary uint8` | $\{0, 255\}$ | $(480, 320)$ | Adaptive thresholding handles lighting gradients. |
+| **Pipeline C** | Input → Stage 1 | Raw Concrete Field Image | `uint8` | $[0, 255]$ | $(480, 320)$ | Raw input with sensor noise and non-uniform lighting. |
+| **Pipeline C** | Stage 1 → Stage 2 | Enhanced Dynamic Range Image | `uint8` | $[0, 255]$ | $(480, 320)$ | Corrects uneven natural illumination and shadows. |
+| **Pipeline C** | Stage 2 → Stage 3 | Restored Smooth Surface | `uint8` | $[0, 255]$ | $(480, 320)$ | 2D Butterworth lowpass removes gravel/aggregate noise. |
+| **Pipeline C** | Stage 3 → Stage 4 | Raw Binary Crack Mask | `binary uint8` | $\{0, 255\}$ | $(480, 320)$ | Local adaptive segmentation extracts crack candidates. |
+| **Pipeline C** | Stage 4 → Stage 5 | Morphologically Refined Mask | `binary uint8` | $\{0, 255\}$ | $(480, 320)$ | Bridges crack breaks, prunes pores, fills cavities. |
+| **Pipeline C** | Stage 5 → Final Mask | Production Binary Mask | `binary uint8` | $\{0, 255\}$ | $(480, 320)$ | Pixel-perfect binary ground-truth comparison mask. |
+| **Pipeline C** | Stage 5 → Visual Overlay | Inspection Overlay RGB Image | `uint8` | $[0, 255]$ | $(480, 320, 3)$ | Scarlet red crack overlay on original grayscale slab. |
+| **Pipeline C** | Stage 5 → Telemetry | Structural Decision & Metrics | `dict / JSON` | PASS / MONITOR / FAIL | Scalar record | Quantitative engineering assessment report. |
 
 ## 4. Pure NumPy Implementations and Hand-Worked Examples
 

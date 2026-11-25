@@ -31,12 +31,18 @@
 ---
 
 ### Slide 3: Engineering Pipeline Architecture (Speaker 1 & 3 - Tech Lead & Enhancement Eng | 1:30 min)
-- **5-Stage Classical Architecture (Pipeline C):**
-  1. **Preprocessing & Spatial Enhancement:** Power-law Gamma ($\gamma=0.85$) expands dark crack tones; percentile contrast stretching normalizes dynamic range.
-  2. **Frequency-Domain Restoration:** 2D centered Butterworth Low-Pass filter ($D_0=45, n=2$) suppresses high-frequency gravel aggregate without introducing ringing artifacts.
-  3. **Local Adaptive Segmentation:** Local Gaussian adaptive thresholding combined with Sobel gradient magnitude confirmation.
-  4. **Morphological Refinement:** Directional closing ($5\times 5$ ellipse) connects broken hairline cracks; morphological reconstruction fills internal holes; area filtering removes pores $<40$ px.
-  5. **Civil Structural Assessment:** Measures cracked area %, counts entities, computes maximum crack length, and outputs **PASS / MONITOR / FAIL**.
+- **Architectural Progression Across Pipelines (Page 5 Specification):**
+  - **Pipeline A (Spatial + Otsu):** Gamma ($\gamma=0.80$) + Percentile Stretch $\to$ Global Otsu Thresholding. (Mean IoU: 0.0303, fails under outdoor lighting gradients).
+  - **Pipeline B (Frequency Restoration + Adaptive):** Spatial Enh $\to$ 2D Centered Butterworth Low-Pass ($D_0=40, n=2$) $\to$ Local Gaussian Adaptive Segmentation ($17\times 17, C=4.0$). (Mean IoU: 0.1709, +5.6× gain).
+  - **Pipeline C (Complete 5-Stage Production System):** Integrates Spatial Enhancement $\to$ 2D Butterworth Filtering $\to$ Local Adaptive Gaussian Thresholding $\to$ Multi-Scale Morphological Refinement (Directional Closing $3\times 3$ ellipse, Area Opening $<20$ px, Hole Filling) $\to$ 8-Connected Component Measurement & Civil Health Decision Engine (**PASS / MONITOR / FAIL**). (Mean IoU: 0.2448).
+- **Inter-Stage Data Type & Value Range Compliance:**
+  - `Input Image:` `uint8 [0, 255]`
+  - `Enhanced Image:` `uint8 [0, 255]`
+  - `Fourier Spectrum:` `complex128 [(-inf, inf) + j(-inf, inf)]`
+  - `Restored Surface:` `uint8 [0, 255]`
+  - `Segmented Candidates:` `binary uint8 {0, 255}`
+  - `Refined Morphological Mask:` `binary uint8 {0, 255}`
+  - `Civil Verdict:` `PASS (<0.20%) | MONITOR (0.20-1.20%) | FAIL (>1.20%)`
 
 ---
 
@@ -66,9 +72,13 @@
 ---
 
 ### Slide 6: Results, Failure Analysis & Lessons Learned (Speaker 5 & 6 | 2:00 min)
-- **Held-Out Test Set Performance:**
-  - Trivial Baseline: $0.081$ IoU | Simple Baseline: $0.245$ IoU | **Pipeline C: $0.584$ IoU** ($+33.9\%$ over baseline).
-  - Execution speed: $<200$ ms per image (under 15 seconds for the whole test set!).
+- **Held-Out Test Set Performance (36 Images Benchmark):**
+  - Trivial Baseline (127 Global): 0.0552 IoU | 37.47% Area Error | 0.2 ms
+  - Simple Baseline (Otsu + 3×3 Open): 0.0474 IoU | 26.98% Area Error | 4.6 ms
+  - Pipeline A (Spatial + Otsu): 0.0303 IoU | 45.23% Area Error | 12.8 ms
+  - Pipeline B (Freq Butterworth + Adaptive): 0.1709 IoU | 3.44% Area Error | 65.6 ms
+  - **Pipeline C (Final Advanced Production): 0.2448 IoU | 1.86% Area Error | 71.3 ms**
+  - *Engineering Milestone:* 5.2× IoU boost over simple baseline, 18× reduction in area quantification error!
 - **Failure Analysis on Worst Cases:**
   1. *Sub-pixel Hairline Cracks (<0.15% area):* Filtered out as background noise. Fix: Multi-scale Hessian ridge detection.
   2. *Deep Structural Shadows:* Local contrast lost in near-zero intensity. Fix: CLAHE with dynamic tile sizing.
