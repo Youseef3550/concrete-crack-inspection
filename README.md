@@ -1,6 +1,6 @@
 # Concrete Surface Crack Detection and Structural Health Assessment
 ## CSE281 Digital Image Processing — Course Project
-**Alamein International University (AIU) | Faculty of Computer Science & Engineering**
+**Faculty of Computer Science & Engineering | Faculty of Computer Science & Engineering**
 
 [![DIP CI Unit Tests](https://github.com/Youseef3550/concrete-crack-inspection/actions/workflows/ci.yml/badge.svg)](https://github.com/Youseef3550/concrete-crack-inspection/actions)
 ![Python 3.12](https://img.shields.io/badge/python-3.12-blue.svg)
@@ -115,7 +115,7 @@ flowchart LR
 
 ### Step 1: Clone and Install Dependencies
 ```bash
-git clone https://github.com/aiu-dip/concrete-crack-inspection.git
+git clone https://github.com/concrete-crack-inspection/concrete-crack-inspection.git
 cd concrete-crack-inspection
 pip install -r requirements.txt
 ```

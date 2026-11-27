@@ -1,6 +1,6 @@
 # Presentation Pitch Deck: Concrete Crack Detection & Structural Assessment
 ## CSE281 Digital Image Processing | Final Project Defense (Week 14)
-**Alamein International University (AIU) | Faculty of Computer Science & Engineering**
+**Faculty of Computer Science & Engineering | Faculty of Computer Science & Engineering**
 **Duration:** 10 Minutes Total (All Squad Members Present)
 
 ---

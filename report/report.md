@@ -1,7 +1,7 @@
 # Automated Concrete Crack Detection and Structural Damage Assessment via Classical Digital Image Processing Pipelines
 
 **Course Code:** CSE281 — Digital Image Processing  
-**Institution:** Faculty of Computer Science & Engineering, Alamein International University (AIU)  
+**Institution:** Faculty of Computer Science & Engineering, Faculty of Computer Science & Engineering  
 **Academic Term:** Fall 2026-2027  
 
 **Engineering Squad:**
