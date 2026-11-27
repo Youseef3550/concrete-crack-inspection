@@ -9,6 +9,15 @@
 
 ![Inspection Panel](results/001_inspection_result.png)
 
+### Engineering Squad & Work Package Distribution
+| # | Member Name | Role / Work Package | Primary Code Modules |
+| :-: | :--- | :--- | :--- |
+| **1** | **Youssef Sameh** | Tech Lead, Architecture, Data Engine & Baselines | `src/data.py`, `src/metrics.py`, `src/pipeline.py`, `src/evaluate.py` |
+| **2** | **Mostafa Khateb** | Spatial Enhancement Engineer | `src/enhancement.py` |
+| **3** | **Saher Rasmy** | Restoration & Frequency-Domain Engineer | `src/restoration.py`, `src/frequency.py` |
+| **4** | **Amin Elsayed** | Segmentation & Gradients Engineer | `src/segmentation.py` |
+| **5** | **Ahmed Genedy** | Mathematical Morphology & Web UI Demo Engineer | `src/morphology.py`, `app/app.py` |
+
 ---
 
 ## 1. Problem Formulation & Overview

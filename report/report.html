@@ -381,7 +381,13 @@ pre code {
     <h1>Automated Concrete Crack Detection and Structural Damage Assessment via Classical Digital Image Processing Pipelines</h1>
 <p><strong>Course Code:</strong> CSE281 — Digital Image Processing<br />
 <strong>Institution:</strong> Faculty of Computer Science &amp; Engineering, Alamein International University (AIU)<br />
-<strong>Academic Term:</strong> Spring / Fall Semester  </p>
+<strong>Academic Term:</strong> Fall 2026-2027  </p>
+<p><strong>Engineering Squad:</strong>
+1. <strong>Youssef Sameh</strong> (Tech Lead, Data Engine &amp; Baselines)
+2. <strong>Mostafa Khateb</strong> (Spatial Enhancement Engineer)
+3. <strong>Saher Rasmy</strong> (Restoration &amp; Frequency Filtering Engineer)
+4. <strong>Amin Elsayed</strong> (Segmentation &amp; Gradients Engineer)
+5. <strong>Ahmed Genedy</strong> (Morphological Refinement &amp; Application UI Engineer)</p>
 <hr />
 <h2>Abstract</h2>
 <p>Civil infrastructure maintenance requires reliable surface defect inspection to mitigate catastrophic failure caused by moisture ingress, rebar corrosion, and structural fatigue. Automated vision-based inspection on real concrete surfaces presents severe image processing challenges, including low contrast between dark aggregate and hairline fractures, non-uniform natural illumination, granular surface texture, and discontinuous crack traces. In strict adherence to classical imaging engineering principles—prohibiting machine learning and neural networks—this paper presents a modular, five-stage classical image processing pipeline. The architecture integrates spatial power-law gamma transformation and contrast stretching, 2D centered Butterworth low-pass frequency filtering, local adaptive Gaussian thresholding confirmed by Sobel gradient magnitude, and morphological refinement using directional closing, hole filling, and small-object area opening. The pipeline terminates with connected-component geometric quantification and an automated structural safety classification rule (PASS / MONITOR / FAIL). Benchmarked on the CrackForest Dataset (CFD) comprising 118 real pavement and concrete images with pixel-level ground truth masks, the proposed Pipeline C achieves a mean Intersection over Union (IoU) of 0.2448 ± 0.1366 and Dice coefficient of 0.3750 on a held-out test set, outperforming a trivial global threshold baseline (0.0552 IoU) and an Otsu-plus-opening baseline (0.0474 IoU) by 4.4× and 5.1× respectively, while executing in 71.3 ms per image and reducing crack area measurement error from 37.47% down to 1.86%. Systematic parameter tuning, five controlled ablation studies, noise robustness evaluations over three random seeds, failure root-cause analysis, and a lossless Run-Length Encoding (RLE) compression scheme achieving a 4.16× compression ratio are presented.</p>
@@ -1275,6 +1281,7 @@ IoU simultaneously penalizes false alarms (FP) and missed crack segments (FN) di
 <table>
 <thead>
 <tr>
+<th style="text-align: center;">#</th>
 <th style="text-align: left;">Squad Member</th>
 <th style="text-align: left;">Work Package</th>
 <th style="text-align: left;">Primary Code Modules</th>
@@ -1283,43 +1290,49 @@ IoU simultaneously penalizes false alarms (FP) and missed crack segments (FN) di
 </thead>
 <tbody>
 <tr>
-<td style="text-align: left;"><strong>Tech Lead</strong></td>
-<td style="text-align: left;">Project Architecture &amp; System Integration</td>
-<td style="text-align: left;"><code>pipeline.py</code>, <code>configs/*.json</code></td>
-<td style="text-align: left;">Full pipeline integration, noise robustness study</td>
+<td style="text-align: center;"><strong>1</strong></td>
+<td style="text-align: left;"><strong>Youssef Sameh</strong></td>
+<td style="text-align: left;">Architecture, Data Engine &amp; Baselines</td>
+<td style="text-align: left;"><code>src/data.py</code>, <code>src/metrics.py</code>, <code>src/pipeline.py</code></td>
+<td style="text-align: left;">System skeleton, controlled noise models, baseline benchmarks, RLE compression</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Data &amp; Baseline Eng.</strong></td>
-<td style="text-align: left;">Data Engine, Loading &amp; Ground Truth</td>
-<td style="text-align: left;"><code>src/data.py</code>, <code>src/metrics.py</code></td>
-<td style="text-align: left;">Resolution reduction study, baseline benchmarks</td>
-</tr>
-<tr>
-<td style="text-align: left;"><strong>Enhancement Eng.</strong></td>
-<td style="text-align: left;">Spatial Point Operations &amp; Sharpening</td>
+<td style="text-align: center;"><strong>2</strong></td>
+<td style="text-align: left;"><strong>Mostafa Khateb</strong></td>
+<td style="text-align: left;">Spatial Enhancement &amp; Contrast</td>
 <td style="text-align: left;"><code>src/enhancement.py</code></td>
-<td style="text-align: left;">Pure NumPy HistEq, 2D Conv, Gamma tuning</td>
+<td style="text-align: left;">Pure NumPy HistEq, vectorized 2D convolution, power-law gamma tuning</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Restoration &amp; Freq Eng.</strong></td>
-<td style="text-align: left;">Noise Models &amp; Fourier Processing</td>
+<td style="text-align: center;"><strong>3</strong></td>
+<td style="text-align: left;"><strong>Saher Rasmy</strong></td>
+<td style="text-align: left;">Noise Restoration &amp; Frequency Filters</td>
 <td style="text-align: left;"><code>src/restoration.py</code>, <code>src/frequency.py</code></td>
-<td style="text-align: left;">2D Butterworth lowpass, Mean vs Median study</td>
+<td style="text-align: left;">2D Butterworth LPF, median filter, alpha-trimmed mean, FFT spectrum analysis</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Segmentation Eng.</strong></td>
-<td style="text-align: left;">Gradient Operators &amp; Thresholding</td>
+<td style="text-align: center;"><strong>4</strong></td>
+<td style="text-align: left;"><strong>Amin Elsayed</strong></td>
+<td style="text-align: left;">Gradients &amp; Adaptive Segmentation</td>
 <td style="text-align: left;"><code>src/segmentation.py</code></td>
-<td style="text-align: left;">Pure NumPy Otsu, Sobel magnitude, Adaptive</td>
+<td style="text-align: left;">Pure NumPy Sobel magnitude, Otsu variance maximization, Gaussian adaptive</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Morphology &amp; Demo Eng.</strong></td>
-<td style="text-align: left;">Mathematical Morphology &amp; Demo UI</td>
+<td style="text-align: center;"><strong>5</strong></td>
+<td style="text-align: left;"><strong>Ahmed Genedy</strong></td>
+<td style="text-align: left;">Morphology &amp; Interactive Application</td>
 <td style="text-align: left;"><code>src/morphology.py</code>, <code>app/app.py</code></td>
-<td style="text-align: left;">Morphological closing/hole filling, Streamlit UI</td>
+<td style="text-align: left;">Directional closing, hole filling, area opening, Streamlit interactive Web App</td>
 </tr>
 </tbody>
 </table>
+<p>--- | :--- | :--- | :--- |
+| <strong>Tech Lead</strong> | Project Architecture &amp; System Integration | <code>pipeline.py</code>, <code>configs/*.json</code> | Full pipeline integration, noise robustness study |
+| <strong>Data &amp; Baseline Eng.</strong> | Data Engine, Loading &amp; Ground Truth | <code>src/data.py</code>, <code>src/metrics.py</code> | Resolution reduction study, baseline benchmarks |
+| <strong>Enhancement Eng.</strong> | Spatial Point Operations &amp; Sharpening | <code>src/enhancement.py</code> | Pure NumPy HistEq, 2D Conv, Gamma tuning |
+| <strong>Restoration &amp; Freq Eng.</strong> | Noise Models &amp; Fourier Processing | <code>src/restoration.py</code>, <code>src/frequency.py</code> | 2D Butterworth lowpass, Mean vs Median study |
+| <strong>Segmentation Eng.</strong> | Gradient Operators &amp; Thresholding | <code>src/segmentation.py</code> | Pure NumPy Otsu, Sobel magnitude, Adaptive |
+| <strong>Morphology &amp; Demo Eng.</strong> | Mathematical Morphology &amp; Demo UI | <code>src/morphology.py</code>, <code>app/app.py</code> | Morphological closing/hole filling, Streamlit UI |</p>
 <hr />
 <h2>10. References</h2>
 <ol>

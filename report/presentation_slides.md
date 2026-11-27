@@ -8,12 +8,11 @@
 ### Slide 1: Title & Executive Summary (Speaker 1 - Tech Lead | 1:00 min)
 - **Title:** Automated Concrete Crack Detection and Structural Health Assessment via Classical Digital Image Processing.
 - **Squad Members & Roles:**
-  - Tech Lead: Architecture & Integration
-  - Data & Baseline Engineer: Data Engine, Degradation & Baseline Benchmarking
-  - Enhancement Engineer: Spatial Transforms & Sharpening
-  - Restoration & Frequency Engineer: Noise Modeling & Fourier Processing
-  - Segmentation Engineer: Gradients & Adaptive Thresholding
-  - Morphology & Evaluation Engineer: Morphological Refinement & Live Demo
+  - **Youssef Sameh** (Tech Lead, Data Engine & Baselines)
+  - **Mostafa Khateb** (Spatial Enhancement Engineer)
+  - **Saher Rasmy** (Restoration & Frequency Engineer)
+  - **Amin Elsayed** (Segmentation & Gradients Engineer)
+  - **Ahmed Genedy** (Morphology & Demo App Engineer)
 - **Core Challenge:** Delivering robust sub-pixel crack detection on real weathered concrete **without using Neural Networks or Machine Learning**.
 
 ---

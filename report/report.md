@@ -2,7 +2,14 @@
 
 **Course Code:** CSE281 — Digital Image Processing  
 **Institution:** Faculty of Computer Science & Engineering, Alamein International University (AIU)  
-**Academic Term:** Spring / Fall Semester  
+**Academic Term:** Fall 2026-2027  
+
+**Engineering Squad:**
+1. **Youssef Sameh** (Tech Lead, Data Engine & Baselines)
+2. **Mostafa Khateb** (Spatial Enhancement Engineer)
+3. **Saher Rasmy** (Restoration & Frequency Filtering Engineer)
+4. **Amin Elsayed** (Segmentation & Gradients Engineer)
+5. **Ahmed Genedy** (Morphological Refinement & Application UI Engineer)
 
 ---
 
@@ -365,8 +372,16 @@ An automated test suite (`tests/test_numpy_vs_lib.py`) contains 11 tests verifyi
 ---
 
 ## 9. Team Contributions Table
-| Squad Member | Work Package | Primary Code Modules | Core Image Processing Deliverable |
-| :--- | :--- | :--- | :--- |
+| # | Squad Member | Work Package | Primary Code Modules | Core Image Processing Deliverable |
+| :-: | :--- | :--- | :--- | :--- |
+| **1** | **Youssef Sameh** | Architecture, Data Engine & Baselines | `src/data.py`, `src/metrics.py`, `src/pipeline.py` | System skeleton, controlled noise models, baseline benchmarks, RLE compression |
+| **2** | **Mostafa Khateb** | Spatial Enhancement & Contrast | `src/enhancement.py` | Pure NumPy HistEq, vectorized 2D convolution, power-law gamma tuning |
+| **3** | **Saher Rasmy** | Noise Restoration & Frequency Filters | `src/restoration.py`, `src/frequency.py` | 2D Butterworth LPF, median filter, alpha-trimmed mean, FFT spectrum analysis |
+| **4** | **Amin Elsayed** | Gradients & Adaptive Segmentation | `src/segmentation.py` | Pure NumPy Sobel magnitude, Otsu variance maximization, Gaussian adaptive |
+| **5** | **Ahmed Genedy** | Morphology & Interactive Application | `src/morphology.py`, `app/app.py` | Directional closing, hole filling, area opening, Streamlit interactive Web App |
+
+
+--- | :--- | :--- | :--- |
 | **Tech Lead** | Project Architecture & System Integration | `pipeline.py`, `configs/*.json` | Full pipeline integration, noise robustness study |
 | **Data & Baseline Eng.** | Data Engine, Loading & Ground Truth | `src/data.py`, `src/metrics.py` | Resolution reduction study, baseline benchmarks |
 | **Enhancement Eng.** | Spatial Point Operations & Sharpening | `src/enhancement.py` | Pure NumPy HistEq, 2D Conv, Gamma tuning |
